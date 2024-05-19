@@ -6,35 +6,56 @@ import numpy as np
 import matplotlib.pyplot as plt
 from os import system as sys
 
-ttedata = [0.0,]
+ttedata = []
 store_open = datetime(2024, 5, 18, 10, 30, 0, 0)
 begin = datetime.now()
 event = ""
 while event != "q":
 	sys('cls')
 	print("Change-Point and Event Rate Tracker\n")
-	print("Print a readout with bar chart (p)\n")
-	print("Add time to event tracker (t)\n")
-	print("Remove the last time (r)\n")
-	for n, e in enumerate(ttedata):
-		print("Event ", str(n), ": ", str(round(e/60.0, 2)))
+	print("Plot Rate History (p)\n")
+	print("Display Statistics (d)\n")
+	print("Add Time To Event Tracker (Enter)\n")
+	print("Remove The Last Time (r)\n")
+	print("Quit Program (q)\n")
+	try:
+		for n, e in enumerate(ttedata):
+			print("Event ", str(n), ": ", str(round(e/60.0, 2)))
+	except:
+		print("Not enough data...\n")
 	event = input(">>")
-	if event == "t":
+	if event == "d":
+		sys('cls')
+		ttedata.append((datetime.now()-begin).total_seconds())
+		#ttedata.append((datetime.now()-store_open).total_seconds())
+		change_points = bb(ttedata, fitness='events', ncp_prior = 1.0)
+		block_sizes = diff(change_points)
+		counts, _ = hist(ttedata, bins = change_points)
+		rates = counts / block_sizes
+		current_rate = round(60*rates[-1], 2)
+		print("Change-Points: \n")
+		for n, cp in enumerate(change_points, 1):
+			print("CP", str(n), ": ", str(round(cp/60.0, 2)), " minutes")
+		print("\nCurrent Rate: \n")
+		print(str(current_rate), "events/min\n")
+		ttedata.pop()
+		input("Press Enter to continue...\n")
+	if event == "":
 		ttedata.append((datetime.now()-begin).total_seconds())
 		#ttedata.append((datetime.now()-store_open).total_seconds())
 	if event == "p":
 		ttedata.append((datetime.now()-begin).total_seconds())
 		#ttedata.append((datetime.now()-store_open).total_seconds())
-		change_points = bb(ttedata, fitness='events', ncp_prior = 0.5)
+		change_points = bb(ttedata, fitness='events', ncp_prior = 1.0)
 		block_sizes = diff(change_points)
 		counts, _ = hist(ttedata, bins = change_points)
 		rates = counts / block_sizes
 		current_rate = round(60*rates[-1], 2)
-		for n, cp in enumerate(change_points):
-			print("Change-point ", str(n), ": ", str(round(cp/60.0, 2)), "\n")
-		print("Current Event Rate: ", current_rate, " events / min.\n")
+		for n, cp in enumerate(change_points, 1):
+			print("CP", str(n), ": ", str(round(cp/60.0, 2)), " minutes")
+		print("Current Rate: ", current_rate, " events / min.\n")
 		plt.bar(x = change_points[0:-1]/60.0, height = 60*rates, width = block_sizes/60.0, align = 'edge', alpha = 0.5)
-		plt.vlines(change_points[1:-1]/60.0, 0.0, 60*max(rates), color = 'r')
+		plt.vlines(change_points/60.0, 0.0, 60*max(rates), color = 'r', alpha = 0.5)
 		plt.title("Event Rate History")
 		plt.xlabel("Time (minutes)")
 		plt.ylabel("Events/Min")
