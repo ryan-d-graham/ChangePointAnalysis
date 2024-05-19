@@ -28,18 +28,22 @@ while event != "q":
 		sys('cls')
 		ttedata.append((datetime.now()-begin).total_seconds())
 		#ttedata.append((datetime.now()-store_open).total_seconds())
-		change_points = bb(ttedata, fitness='events', ncp_prior = 1.0)
-		block_sizes = diff(change_points)
-		counts, _ = hist(ttedata, bins = change_points)
-		rates = counts / block_sizes
-		current_rate = round(60*rates[-1], 2)
-		print("Change-Points: \n")
-		for n, cp in enumerate(change_points, 1):
-			print("CP", str(n), ": ", str(round(cp/60.0, 2)), " minutes")
-		print("\nCurrent Rate: \n")
-		print(str(current_rate), "events/min\n")
-		ttedata.pop()
-		input("Press Enter to continue...\n")
+		try:
+			change_points = bb(ttedata, fitness='events', ncp_prior = 1.0)
+			block_sizes = diff(change_points)
+			counts, _ = hist(ttedata, bins = change_points)
+			rates = counts / block_sizes
+			current_rate = round(60*rates[-1], 2)
+			print("Change-Points: \n")
+			for n, cp in enumerate(change_points, 1):
+				print("CP", str(n), ": ", str(round(cp/60.0, 2)), " minutes")
+			print("\nCurrent Rate: \n")
+			print(str(current_rate), "events/min\n")
+			ttedata.pop()
+			input("Press Enter to continue...\n")
+		except:
+			print("Bayesian Blocks failed... (not enough data?)\n")
+			input("Press Enter to continue...\n")
 	if event == "":
 		ttedata.append((datetime.now()-begin).total_seconds())
 		#ttedata.append((datetime.now()-store_open).total_seconds())
@@ -62,4 +66,7 @@ while event != "q":
 		plt.show()
 		ttedata.pop() #this was not a real event, but a query on current rate if an event happened right now
 	if event == "r":
-		ttedata.pop()   # use this if an event was marked by accident
+		if len(ttedata) < 1:
+			break
+		else:
+			ttedata.pop()   # use this if an event was marked by accident
