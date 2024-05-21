@@ -65,7 +65,7 @@ while event != "q":
 			current_rate = round(60*rates[-1], 2)
 			for n, cp in enumerate(change_points, 1):
 				print("CP", str(n+1), ": ", str(round(cp/60.0, 2)), " minutes")
-			print("Current Rate: ", current_rate, " events / min.\n")
+			print("\nCurrent Rate: ", current_rate, " events / min.\n")
 			plt.bar(x = change_points[0:-1]/60.0, height = 60*rates, width = block_sizes/60.0, align = 'edge', alpha = 0.5)
 			plt.vlines(change_points/60.0, 0.0, 60*max(rates), color = 'r', alpha = 0.5)
 			plt.title("Event Rate History")
