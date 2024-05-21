@@ -5,57 +5,75 @@ from datetime import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 from os import system as sys
+import pickle
 
 ttedata = []
 #store_open = datetime(2024, 5, 18, 10, 30, 0, 0)
 
-"""try:
+try:
 	with open("ttedata.pkl", 'rb') as file:
 		ttedata = pickle.load(file)
-		begin = ttedata[-1]
 except:
-	print("Could not load file...\n")  """
+	print("Could not load TTE file...\n")  
 	
-begin = datetime.now()
+try:
+	with open("resume.pkl", 'rb') as file:
+		begin = pickle.load(file)
+except:
+	print("Could not load last TTE for resuming...\n")
+	print("Using current system time as beginning...\n")
+	begin = datetime.now()
+	
+
 event = ""
-ncpp = 4.0
+ncpp = 4.0 # default
 while event != "q":
 	sys('cls')
 	print("Change-Point and Event Rate Tracker\n")
 	print("Plot Rate History (p)\n")
 	print("Display Statistics (d)\n")
-	print("Add Time To Event Tracker (Enter)\n")
-	#print("Save times to file (s)\n")
-	#print("Load times from file (l)\n")
+	print("Save times to file (s)\n")
+	print("Load times from file (l)\n")
 	print("View Event Times (t)\n")
-	print("Delete all times (R)\n")
+	print("Reset Everything (R)\n")
 	print("Remove last event (r)\n")
 	print("Adjust ncp_prior (n)\n")
 	print("Quit Program (q)\n")
-	event = input(">>")
+	event = input("Press Enter to log a TTE>>")
 	if event == "R":
 		ttedata = []
-		"""with open('ttedata.pkl', 'wb') as file:
-			pickle.dump(ttedata, file)	"""	
-	"""if event == "l":
+		begin = datetime.now()
+		with open("ttedata.pkl", 'wb') as file:
+			pickle.dump(ttedata, file)
+		with open("resume.pkl", 'wb') as file:
+				pickle.dump(datetime.now(), file)
+	if event == "l":
 		try:
 			with open("ttedata.pkl", 'rb') as file:
 				ttedata = pickle.load(file)
 		except:
-			print("Could not load file...\n")
-			input("Press Enter to continue...\n") """
-	"""if event == "s":
-		with open('ttedata.pkl', 'wb') as file:
-			pickle.dump(ttedata, file)"""
+			print("Could not load TTE file...\n")
+			input("Press Enter to continue...\n")
+		try:
+			with open("resume.pkl", 'wb') as file:
+				pickle.dump(datetime.now(), file)
+		except:
+			print("Could not load save time...\n")
+			input("Press Enter to continue...\n")
+	if event == "s":
+		with open("ttedata.pkl", 'wb') as file:
+			pickle.dump(ttedata, file)
+		with open("resume.pkl", 'wb') as file:
+			pickle.dump(datetime.now(), file)
 	if event == "n":
+		sys('cls')
+		print("ncp_prior = ", str(ncpp), "\n")
 		ncpp = float(input("Enter new value: "))
 	if event == "t":
 		sys('cls')
 		try:
 			for n, e in enumerate(ttedata):
 				print("Event ", str(n+1), ": ", str(round(e/60.0, 3)))
-			#for i in range(max(0, len(ttedata)-window), len(ttedata)):
-			#	print("Event ", str(i), ": ", str(round(ttedata[i]/60.0, 2)))
 			input("Press Enter to continue...\n")
 		except:
 			print("Not enough data...\n") 
@@ -77,13 +95,13 @@ while event != "q":
 			ttedata.pop()
 			input("Press Enter to continue...\n")
 		except:
-			print("Bayesian Blocks failed... (not enough data?)\n")
+			print("\nBayesian Blocks failed... (not enough data?)\n")
 			input("Press Enter to continue...\n")
 	if event == "":
 		ttedata.append((datetime.now()-begin).total_seconds())
 		#ttedata.append((datetime.now()-store_open).total_seconds())
-		"""with open('ttedata.pkl', 'wb') as file:
-			pickle.dump(ttedata, file)"""
+		with open('ttedata.pkl', 'wb') as file:
+			pickle.dump(ttedata, file)
 	if event == "p":
 		try:
 			ttedata.append((datetime.now()-begin).total_seconds())
@@ -105,13 +123,13 @@ while event != "q":
 			ttedata.pop()
 			#this was not a real event, but a query on current rate if an event happened right now
 		except:
-			print("Bayesian Blocks failed... (not enough data?)\n")
+			print("\nBayesian Blocks failed... (not enough data?)\n")
 			input("Press Enter to continue...\n")
 	if event == "r":
 		if len(ttedata) < 1:
 			break
 		else:
 			ttedata.pop()
-			#with open('ttedata.pkl', 'wb') as file:
-			#	pickle.dump(ttedata, file)
+			with open('ttedata.pkl', 'wb') as file:
+				pickle.dump(ttedata, file)
 
