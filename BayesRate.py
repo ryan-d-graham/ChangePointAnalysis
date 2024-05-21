@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from os import system as sys
 
 ttedata = []
-store_open = datetime(2024, 5, 18, 10, 30, 0, 0)
+#store_open = datetime(2024, 5, 18, 10, 30, 0, 0)
 begin = datetime.now()
 event = ""
 event_window = 10
