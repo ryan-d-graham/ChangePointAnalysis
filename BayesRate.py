@@ -26,7 +26,7 @@ except:
 	
 
 event = ""
-ncpp = 4.0 # default
+p0 = 0.05 # default
 while event != "q":
 	sys('cls')
 	print("Change-Point and Event Rate Tracker\n")
@@ -37,7 +37,7 @@ while event != "q":
 	print("View Event Times (t)\n")
 	print("Reset Everything (R)\n")
 	print("Remove last event (r)\n")
-	print("Adjust ncp_prior (n)\n")
+	print("Adjust p0 (n)\n")
 	print("Quit Program (q)\n")
 	event = input("Press Enter to log a TTE>>")
 	if event == "R":
@@ -67,8 +67,8 @@ while event != "q":
 			pickle.dump(datetime.now(), file)
 	if event == "n":
 		sys('cls')
-		print("ncp_prior = ", str(ncpp), "\n")
-		ncpp = float(input("Enter new value: "))
+		print("p0 = ", str(p0), "\n")
+		p0 = float(input("Enter new value: "))
 	if event == "t":
 		sys('cls')
 		try:
@@ -82,7 +82,7 @@ while event != "q":
 		ttedata.append((datetime.now()-begin).total_seconds())
 		#ttedata.append((datetime.now()-store_open).total_seconds())
 		try:
-			change_points = bb(ttedata, fitness='events', ncp_prior = ncpp)
+			change_points = bb(ttedata, fitness='events', p0 = p0)
 			block_sizes = diff(change_points)
 			counts, _ = hist(ttedata, bins = change_points)
 			rates = counts / block_sizes
@@ -106,7 +106,7 @@ while event != "q":
 		try:
 			ttedata.append((datetime.now()-begin).total_seconds())
 			#ttedata.append((datetime.now()-store_open).total_seconds())
-			change_points = bb(ttedata, fitness='events', ncp_prior = ncpp)
+			change_points = bb(ttedata, fitness='events', p0 = p0)
 			block_sizes = diff(change_points)
 			counts, _ = hist(ttedata, bins = change_points)
 			rates = counts / block_sizes
@@ -132,4 +132,3 @@ while event != "q":
 			ttedata.pop()
 			with open('ttedata.pkl', 'wb') as file:
 				pickle.dump(ttedata, file)
-
