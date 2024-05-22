@@ -40,4 +40,31 @@ def calculate_poisson_rates(timestamps, weights, edges):
     rates.append(rate)
   return rates
 
+def main():
+  #Record key presses for a specified duration (e.g., 60 seconds)
+  duration = 60 # in seconds
+  timestamps, weights = record_key_presses(duration)
+
+  if len(timestamps) > 0:
+    edges = bayesian_blocks_wrapper(timestamps)
+    rates = calculate_poisson_rates(timestamps, weights, edges)
+    print("Bayesian Blocks edges:", edges)
+    print("Poisson rates per segment:", rates)
+
+    #plot the results
+    plt.figure(figsize=(10, 6))
+    plt.plot(timestamps, np.ones_like(timestamps), 'b.', markersize=10, label='Key Presses')
+    for i, edges in enumerate(edges):
+      plt.axvline(edge, color='r', linestyle='--', label='Change Point' if i == 0 else "")
+      plt.xlabel('Time (seconds)')
+      plt.ylabel('Activity / Poisson Rate')
+      plt.title('Key Press Activity with Bayesian Blocks Change Points and Poisson Rates')
+      plt.legend()
+      plt.show()
+  else:
+    print("No key presses were recorded.")
+
+if __name__ == "__main__":
+  main()
+
 
