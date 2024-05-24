@@ -13,7 +13,7 @@ def bayesian_blocks_wrapper(data, p0=0.05, weights=None):
     data = np.asarray(data)
     if weights is not None:
         weights = np.asarray(weights)
-    edges = bayesian_blocks(data, p0=p0, fitness='events', weights=weights)
+    edges = bayesian_blocks(t=data, x=weights, p0=p0, fitness='events')
     return edges
 
 def calculate_poisson_rates(timestamps, weights, edges):
