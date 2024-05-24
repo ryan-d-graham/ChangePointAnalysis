@@ -1,18 +1,13 @@
 import time
 import numpy as np
-import matplotlib.pyplot as plt
-from astropy.stats import bayesian_blocks
 import os
 import threading
 import keyboard
-import winsound  # For beep sound on Windows
+from astropy.stats import bayesian_blocks
 
 # Initialize global variables
 timestamps = []
 weights = []
-change_points = []
-weighted_rates = []
-update_plot = False
 
 def bayesian_blocks_wrapper(data, p0=0.05, weights=None):
     data = np.asarray(data)
@@ -53,7 +48,7 @@ def calculate_cumulative_weight(timestamps, weights, edges, time_t):
     return cumulative_weight
 
 def record_key_presses():
-    global timestamps, weights, update_plot
+    global timestamps, weights
     start_time = time.time()
     
     while True:
@@ -62,12 +57,9 @@ def record_key_presses():
             timestamps.append(current_time - start_time)
             weight = input("Enter weight for the meal (or press Enter for default): ")
             weights.append(float(weight) if weight else 1.0)
-            update_analysis()
+            display_statistics()
             while keyboard.is_pressed('enter'):
                 pass  # Avoid multiple recordings
-        
-        if keyboard.is_pressed('p'):
-            update_plot = True
 
 def update_analysis():
     global change_points, weighted_rates
@@ -80,53 +72,36 @@ def update_analysis():
         new_change_points = bayesian_blocks_wrapper(timestamps, weights=weights)
         new_weighted_rates = calculate_poisson_rates(timestamps, weights, new_change_points)
         
-        if len(new_change_points) > len(change_points):
-            change_points[:] = new_change_points
-            weighted_rates[:] = new_weighted_rates
-            alert_change_point()
-        
         change_points[:] = new_change_points
         weighted_rates[:] = new_weighted_rates
 
-        display_analysis()
-
-def alert_change_point():
-    print("Change point detected!")
-    # Beep sound (Windows only)
-    winsound.Beep(1000, 500)
-
-def display_plot():
-    plt.clf()
-    plt.plot(timestamps, np.ones_like(timestamps), 'b.', markersize=10, label='Key Presses')
-    for i, edge in enumerate(change_points):
-        plt.axvline(edge, color='r', linestyle='--', label='Change Point' if i == 0 else "")
-    for i in range(len(change_points) - 1):
-        start, end = change_points[i], change_points[i + 1]
-        plt.hlines(weighted_rates[i], start, end, colors='g', linestyles='-', label='Poisson Rate' if i == 0 else "")
-    plt.xlabel('Time (seconds)')
-    plt.ylabel('Activity / Poisson Rate')
-    plt.title('Key Press Activity with Bayesian Blocks Change Points and Poisson Rates')
-    plt.legend()
-    plt.draw()
-    plt.pause(0.001)  # Update the plot interactively
-
-def display_analysis():
+def display_statistics():
+    global change_points, weighted_rates
+    update_analysis()
     os.system('cls' if os.name == 'nt' else 'clear')
-    print(f"{'Block Start':<15}{'Block End':<15}{'Weighted Rate':<15}{'Delta W':<15}")
-    print("="*60)
-    delta_ws = calculate_delta_w(weighted_rates)
-    for i in range(len(change_points) - 1):
-        start, end = change_points[i], change_points[i + 1]
-        rate = weighted_rates[i]
-        delta_w = delta_ws[i - 1] if i > 0 else 0
-        print(f"{start:<15.2f}{end:<15.2f}{rate:<15.2f}{delta_w:<15.2f}")
+    print("Business Activity Tracker\n")
+    print("Instructions:")
+    print("- Press Enter to record a unit of business activity.")
+    print("- Optionally, enter a weight for the activity.")
+    print("- The program calculates statistics based on recorded activity.\n")
     
     if len(timestamps) > 0:
+        delta_ws = calculate_delta_w(weighted_rates)
+        print(f"{'Block Start':<15}{'Block End':<15}{'Weighted Rate':<15}{'Delta W':<15}")
+        print("="*60)
+        for i in range(len(change_points) - 1):
+            start, end = change_points[i], change_points[i + 1]
+            rate = weighted_rates[i]
+            delta_w = delta_ws[i - 1] if i > 0 else 0
+            print(f"{start:<15.2f}{end:<15.2f}{rate:<15.2f}{delta_w:<15.2f}")
+        
         current_time = time.time() - timestamps[0]
         cumulative_weight = calculate_cumulative_weight(timestamps, weights, change_points, current_time)
         current_rate = np.sum(weights) / current_time
         print("\nCurrent Weighted Rate (approaching 0 asymptotically):", current_rate)
         print("Cumulative Weight up to current time:", cumulative_weight)
+    else:
+        print("No data recorded yet.")
 
 def main():
     global update_plot  # Declare update_plot as global to modify it within the function
@@ -135,16 +110,9 @@ def main():
     key_press_thread = threading.Thread(target=record_key_presses)
     key_press_thread.start()
     
-    plt.ion()  # Turn on interactive mode
-    plt.show()
-    
     while True:
-        time.sleep(1)  # Refresh the analysis every second
-        if timestamps:
-            update_analysis()
-        if update_plot:
-            display_plot()
-            update_plot = False
+        time.sleep(1)  # Refresh the display every second
+        display_statistics()
 
 if __name__ == "__main__":
     main()
