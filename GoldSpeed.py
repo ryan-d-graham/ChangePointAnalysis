@@ -35,67 +35,29 @@ def calculate_poisson_rates(timestamps, weights, edges):
     for i in range(len(edges) - 1):
         start, end = edges[i], edges[i + 1]
         duration = end - start
+        count = np.sum([(timestamps >= start) & (timestamps < end)])
         total_weight = np.sum(weights[(timestamps >= start) & (timestamps < end)])
         rate = total_weight / duration if duration > 0 else 0
         rates.append(rate)
     return rates
 
-def calculate_delta_w(rates):
-    if len(rates) > 1:
-        delta_ws = np.diff(rates)
-    else:
-        delta_ws = np.array([])
-    return delta_ws
-
-def calculate_cumulative_weight(timestamps, weights, edges, time_t):
-    cumulative_weight = 0
-    for i in range(len(edges) - 1):
-        start, end = edges[i], edges[i + 1]
-        if time_t < start:
-            break
-        if time_t <= end:
-            duration = time_t - start
-            rate = np.sum(weights[(timestamps >= start) & (timestamps < end)]) / (end - start)
-            cumulative_weight += rate * duration
-            break
-        else:
-            duration = end - start
-            rate = np.sum(weights[(timestamps >= start) & (timestamps < end)]) / duration
-            cumulative_weight += rate * duration
-    return cumulative_weight
-
 def main():
-    # Record key presses for a specified duration (e.g., 36000 seconds or 10 hours)
-    duration = 36000 # in seconds
+    duration = 36000 # in seconds  (36000sec = 10hrs)
     timestamps, weights = record_key_presses(duration)
     p0 = float(input("Set sensitivity p0: "))
     if len(timestamps) > 0:
-        edges = bayesian_blocks_wrapper(timestamps, p0, weights)
+        edges = bayesian_blocks_wrapper(timestamps, p0)
         rates = calculate_poisson_rates(timestamps, weights, edges)
-        delta_ws = calculate_delta_w(rates)
-        current_time = time.time() - timestamps[0]
-        cumulative_weight = calculate_cumulative_weight(timestamps, weights, edges, current_time)
-        
         print("Bayesian Blocks edges:", edges)
         print("Poisson rates per segment:", rates)
-        print("Delta W:", delta_ws)
-        print("Cumulative Weight up to current time:", cumulative_weight)
-
-        # Plot the results
         plt.figure(figsize=(10, 6))
         plt.plot(timestamps, np.ones_like(timestamps), 'b.', markersize=10, label='Key Presses')
         for i, edge in enumerate(edges):
             plt.axvline(edge, color='r', linestyle='--', label='Change Point' if i == 0 else "")
+            plt.text(edge, 1.05, f"{weights[i]:.2f}", fontsize=20, ha='right', va='top')
         for i in range(len(edges) - 1):
             start, end = edges[i], edges[i + 1]
             plt.hlines(rates[i], start, end, colors='g', linestyles='-', label='Poisson Rate' if i == 0 else "")
-        
-        # Annotate Delta W at each change point
-        if len(delta_ws) > 0:
-            change_points = edges[1:]  # Skip the first edge as it has no preceding delta
-            for i, delta in enumerate(delta_ws):
-                plt.text(change_points[i], rates[i], f'{delta:.2f}', color='black', fontsize=20, ha='right', va='top')
-
         plt.xlabel('Time (seconds)')
         plt.ylabel('Activity / Poisson Rate')
         plt.title('Key Press Activity with Bayesian Blocks Change Points and Poisson Rates')
