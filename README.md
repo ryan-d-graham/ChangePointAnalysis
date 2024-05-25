@@ -38,6 +38,12 @@ Commands
 	•	Press Esc: Stop recording key presses.
 	•	Set sensitivity p0: Choose the sensitivity of change-point detection.
 
+Nota Bene on p0:
+
+In the context of the Bayesian Blocks algorithm,  p_0  represents the false-positive rate, or the probability of detecting a change point when there is none. This parameter controls the sensitivity of the algorithm to changes in the data. A lower  p_0  value means fewer false positives, leading to fewer detected change points and a smoother model. Conversely, a higher  p_0  value allows for more detected change points, potentially capturing more nuances in the data but also increasing the risk of false positives.
+
+Choosing an appropriate  p_0  depends on the specific application and the acceptable trade-off between sensitivity and specificity.
+
 Example Output
 
 The script will display Bayesian Blocks edges, Poisson rates per segment, and plot the results, including key presses, change points, and event rates.
