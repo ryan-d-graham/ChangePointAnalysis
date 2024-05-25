@@ -94,7 +94,7 @@ def main():
         if len(delta_ws) > 0:
             change_points = edges[1:]  # Skip the first edge as it has no preceding delta
             for i, delta in enumerate(delta_ws):
-                plt.text(change_points[i], rates[i], f'{delta:.2f}', color='black', fontsize=10, ha='left', va='bottom')
+                plt.text(change_points[i], rates[i], f'{delta:.2f}', color='black', fontsize=20, ha='right', va='top')
 
         plt.xlabel('Time (seconds)')
         plt.ylabel('Activity / Poisson Rate')
