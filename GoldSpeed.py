@@ -35,18 +35,17 @@ def calculate_poisson_rates(timestamps, weights, edges):
     for i in range(len(edges) - 1):
         start, end = edges[i], edges[i + 1]
         duration = end - start
-        count = np.sum([(timestamps >= start) & (timestamps < end)])
         total_weight = np.sum(weights[(timestamps >= start) & (timestamps < end)])
         rate = total_weight / duration if duration > 0 else 0
         rates.append(rate)
     return rates
 
 def main():
-    duration = 36000 # in seconds  (36000sec = 10hrs)
+    duration = 36000  # in seconds (36000sec = 10hrs)
     timestamps, weights = record_key_presses(duration)
     p0 = float(input("Set sensitivity p0: "))
     if len(timestamps) > 0:
-        edges = bayesian_blocks_wrapper(timestamps, p0)
+        edges = bayesian_blocks_wrapper(timestamps, p0, weights)
         rates = calculate_poisson_rates(timestamps, weights, edges)
         print("Bayesian Blocks edges:", edges)
         print("Poisson rates per segment:", rates)
@@ -54,7 +53,9 @@ def main():
         plt.plot(timestamps, np.ones_like(timestamps), 'b.', markersize=10, label='Key Presses')
         for i, edge in enumerate(edges):
             plt.axvline(edge, color='r', linestyle='--', label='Change Point' if i == 0 else "")
-            plt.text(edge, 1.05, f"{weights[i]:.2f}", fontsize=20, ha='right', va='top')
+            if i < len(edges) - 1:
+                delta_w = rates[i + 1] - rates[i]
+                plt.text(edge, 1.05, f"{delta_w:.2f}", fontsize=20, ha='right', va='top')
         for i in range(len(edges) - 1):
             start, end = edges[i], edges[i + 1]
             plt.hlines(rates[i], start, end, colors='g', linestyles='-', label='Poisson Rate' if i == 0 else "")
