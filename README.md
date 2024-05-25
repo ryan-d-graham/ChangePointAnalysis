@@ -2,9 +2,9 @@ ChangePointAnalysis
 
 Overview
 
-ChangePointAnalysis is a Python tool for real-time change-point detection and rate monitoring in time-tagged event data using the Bayesian Blocks algorithm (Scargle, 2013). This tool is particularly useful for applications such as tracking customer queue intensity, monitoring abrupt changes in radiation intensity, detecting churn rates, and more.
+ChangePointAnalysis is a collection of Python tools and codes for real-time change-point detection and rate monitoring in time-tagged event data using the Bayesian Blocks algorithm (Scargle, 2013). This tool is particularly useful for applications such as tracking customer queue intensity, monitoring abrupt changes in radiation intensity, detecting churn rates, and more.
 
-Features
+Features (Not necessarily all features are present in any one script in the repo, you will have to dig around until I do some more refactoring)
 
 	•	Real-time change-point detection: Identify abrupt changes in event rates as they happen.
 	•	Weighted Poisson rates: Estimate the rate of events in each detected time segment.
