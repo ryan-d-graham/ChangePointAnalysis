@@ -89,15 +89,13 @@ def main():
         for i in range(len(edges) - 1):
             start, end = edges[i], edges[i + 1]
             plt.hlines(rates[i], start, end, colors='g', linestyles='-', label='Poisson Rate' if i == 0 else "")
-
-        # Add vertical lines for delta Ws
+        
+        # Annotate Delta W at each change point
         if len(delta_ws) > 0:
             change_points = edges[1:]  # Skip the first edge as it has no preceding delta
             for i, delta in enumerate(delta_ws):
-                color = 'r' if delta > 0 else 'g'
-                linewidth = 2 + abs(delta) * 2  # Thicker lines for larger deltas
-                plt.axvline(change_points[i], color=color, linestyle='-', linewidth=linewidth, label='Delta W' if i == 0 else "")
-        
+                plt.text(change_points[i], rates[i], f'{delta:.2f}', color='black', fontsize=10, ha='left', va='bottom')
+
         plt.xlabel('Time (seconds)')
         plt.ylabel('Activity / Poisson Rate')
         plt.title('Key Press Activity with Bayesian Blocks Change Points and Poisson Rates')
