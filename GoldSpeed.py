@@ -89,11 +89,14 @@ def main():
         for i in range(len(edges) - 1):
             start, end = edges[i], edges[i + 1]
             plt.hlines(rates[i], start, end, colors='g', linestyles='-', label='Poisson Rate' if i == 0 else "")
-        
-        # Add stem plot for delta Ws
+
+        # Add vertical lines for delta Ws
         if len(delta_ws) > 0:
             change_points = edges[1:]  # Skip the first edge as it has no preceding delta
-            plt.stem(change_points, delta_ws, linefmt='C1-', markerfmt='C1o', basefmt='C1-', label='Delta W', use_line_collection=True)
+            for i, delta in enumerate(delta_ws):
+                color = 'r' if delta > 0 else 'g'
+                linewidth = 2 + abs(delta) * 2  # Thicker lines for larger deltas
+                plt.axvline(change_points[i], color=color, linestyle='-', linewidth=linewidth, label='Delta W' if i == 0 else "")
         
         plt.xlabel('Time (seconds)')
         plt.ylabel('Activity / Poisson Rate')
