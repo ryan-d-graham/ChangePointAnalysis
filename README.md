@@ -7,9 +7,11 @@ ChangePointAnalysis is a Python tool for real-time change-point detection and ra
 Features
 
 	•	Real-time Data Collection: Record timestamps and associated weights via keyboard inputs.
-	•	Bayesian Blocks Analysis: Detect change points in event rates.
-	•	Poisson Rate Calculation: Compute the event rate for segments between change points.
-	•	Dynamic Visualization: Generate plots displaying key presses, change points, and event rates.
+	•	Bayesian Blocks Analysis: Detect change points in weighted event rates.
+	•	Poisson Rate Calculation: Compute the weighted event rate for segments between change points.
+	•	Dynamic Visualization: Generate plots displaying key presses, change points, and weighted event rates.
+ 
+The weights may correspond to a measure or observable of interest, such as quantity or weight of chicken, sales, 
 
 Installation
 
