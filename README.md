@@ -11,7 +11,7 @@ Features
 	•	Poisson Rate Calculation: Compute the weighted event rate for segments between change points.
 	•	Dynamic Visualization: Generate plots displaying key presses, change points, and weighted event rates.
  
-The weights may correspond to a measure or observable of interest, such as quantity or weight of chicken, sales, 
+The weights may correspond to a measure or observable of interest, such as quantity or weight of chicken, sales, or perhaps something more abstract...
 
 Installation
 
