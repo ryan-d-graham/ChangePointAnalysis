@@ -85,12 +85,12 @@ def main():
         plt.plot(timestamps, np.ones_like(timestamps), 'b.', markersize=10, label='Key Presses')
         for i, edge in enumerate(edges):
             plt.axvline(edge, color='r', linestyle='--', label='Change Point' if i == 0 else "")
-            if i < len(edges) - 1:
-                delta_w = rates[i + 1] - rates[i]
-                plt.text(edge, 1.05, f"{delta_w:.2f}", fontsize=20, ha='right', va='top')
         for i in range(len(edges) - 1):
             start, end = edges[i], edges[i + 1]
             plt.hlines(rates[i], start, end, colors='g', linestyles='-', label='Poisson Rate' if i == 0 else "")
+        for i in range(len(edges) - 1):
+            delta_w = delta_ws[i] if i < len(delta_ws) else 0
+            plt.text(edges[i+1], 1.05, f"{delta_w:.2f}", fontsize=20, ha='right', va='top')
         plt.xlabel('Time (seconds)')
         plt.ylabel('Activity / Poisson Rate')
         plt.title('Key Press Activity with Bayesian Blocks Change Points and Poisson Rates')
