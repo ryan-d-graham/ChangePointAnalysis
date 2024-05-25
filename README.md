@@ -1,9 +1,59 @@
-This is a little script I wrote to apply the research in https://arxiv.org/pdf/1207.5578 to track changepoints in and levels of customer queue intensity in real time at Golden Chick. 
+ChangePointAnalysis
 
-Other use cases include:
+Overview
 
-1) Detecting abrupt changes in radiation intensity with particle detections logged as TTE data (astronomy was its initial purpose)
-2) Detecting times at which abrupt changes in churn rate occur and the churn rates within these time blocks
-3) ... rates at which customers place meal orders... (my application for work) ... to predict employee workload
-4) ... call rates for a business ... when to place the most effort on answering calls with limited time
-5) ... traffic flow ... 
+ChangePointAnalysis is a Python tool for real-time change-point detection and rate monitoring in time-tagged event data using the Bayesian Blocks algorithm (Scargle, 2013). This tool is particularly useful for applications such as tracking customer queue intensity, monitoring abrupt changes in radiation intensity, detecting churn rates, and more.
+
+Features
+
+	•	Real-time change-point detection: Identify abrupt changes in event rates as they happen.
+	•	Weighted Poisson rates: Estimate the rate of events in each detected time segment.
+	•	Interactive plotting: Visualize key press data, change points, and event rates dynamically.
+
+Use Cases
+
+	1.	Astronomy: Detecting changes in radiation intensity with particle detections logged as TTE data.
+	2.	Customer Service: Monitoring times of abrupt changes in customer order rates to predict workload.
+	3.	Call Centers: Identifying optimal times for handling calls based on call rate changes.
+	4.	Traffic Analysis: Detecting changes in traffic flow rates for better traffic management.
+
+Installation
+
+Clone the repository:
+
+git clone https://github.com/ryan-d-graham/ChangePointAnalysis.git
+cd ChangePointAnalysis
+
+Install the required dependencies:
+
+pip install -r requirements.txt
+
+Usage
+
+Run the main script to start recording key presses and detecting change points:
+
+python ChangePointAnalysis.py
+
+Commands
+
+	•	Press Enter: Record a timestamp. You will be prompted to enter a weight for the event.
+	•	Press Esc: Stop recording key presses.
+	•	Set sensitivity p0: Choose the sensitivity of change-point detection.
+
+Example Output
+
+The script will display Bayesian Blocks edges, Poisson rates per segment, and plot the results.
+
+Contributing
+
+We welcome contributions! Please fork the repository and create a pull request.
+
+License
+
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+Acknowledgements
+
+This tool utilizes the Bayesian Blocks implementation from the Astropy library.
+
+Feel free to customize further as per your needs!
