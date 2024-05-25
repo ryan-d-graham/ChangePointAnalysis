@@ -47,8 +47,16 @@ def main():
     if len(timestamps) > 0:
         edges = bayesian_blocks_wrapper(timestamps, p0, weights)
         rates = calculate_poisson_rates(timestamps, weights, edges)
+        delta_ws = calculate_delta_w(rates)
+        current_time = time.time() - timestamps[0]
+        cumulative_weight = calculate_cumulative_weight(timestamps, weights, edges, current_time)
+        
         print("Bayesian Blocks edges:", edges)
         print("Poisson rates per segment:", rates)
+        print("Delta W:", delta_ws)
+        print("Cumulative Weight up to current time:", cumulative_weight)
+
+        # Plot the results
         plt.figure(figsize=(10, 6))
         plt.plot(timestamps, np.ones_like(timestamps), 'b.', markersize=10, label='Key Presses')
         for i, edge in enumerate(edges):
