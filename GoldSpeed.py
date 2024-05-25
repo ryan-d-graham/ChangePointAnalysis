@@ -40,6 +40,30 @@ def calculate_poisson_rates(timestamps, weights, edges):
         rates.append(rate)
     return rates
 
+def calculate_delta_w(rates):
+    if len(rates) > 1:
+        delta_ws = np.diff(rates)
+    else:
+        delta_ws = np.array([])
+    return delta_ws
+
+def calculate_cumulative_weight(timestamps, weights, edges, time_t):
+    cumulative_weight = 0
+    for i in range(len(edges) - 1):
+        start, end = edges[i], edges[i + 1]
+        if time_t < start:
+            break
+        if time_t <= end:
+            duration = time_t - start
+            rate = np.sum(weights[(timestamps >= start) & (timestamps < end)]) / (end - start)
+            cumulative_weight += rate * duration
+            break
+        else:
+            duration = end - start
+            rate = np.sum(weights[(timestamps >= start) & (timestamps < end)]) / duration
+            cumulative_weight += rate * duration
+    return cumulative_weight
+
 def main():
     duration = 36000  # in seconds (36000sec = 10hrs)
     timestamps, weights = record_key_presses(duration)
