@@ -71,4 +71,37 @@ def main():
     p0 = float(input("Set sensitivity p0: "))
     if len(timestamps) > 0:
         edges = bayesian_blocks_wrapper(timestamps, p0, weights)
-​⬤
+        rates = calculate_poisson_rates(timestamps, weights, edges)
+        delta_ws = calculate_delta_w(rates)
+        current_time = time.time() - timestamps[0]
+        cumulative_weight = calculate_cumulative_weight(timestamps, weights, edges, current_time)
+        
+        print("Bayesian Blocks edges:", edges)
+        print("Poisson rates per segment:", rates)
+        print("Delta W:", delta_ws)
+        print("Cumulative Weight up to current time:", cumulative_weight)
+
+        # Plot the results
+        plt.figure(figsize=(10, 6))
+        plt.plot(timestamps, np.ones_like(timestamps), 'b.', markersize=10, label='Key Presses')
+        for i, edge in enumerate(edges):
+            plt.axvline(edge, color='r', linestyle='--', label='Change Point' if i == 0 else "")
+        for i in range(len(edges) - 1):
+            start, end = edges[i], edges[i + 1]
+            plt.hlines(rates[i], start, end, colors='g', linestyles='-', label='Poisson Rate' if i == 0 else "")
+        
+        # Add stem plot for delta Ws
+        if len(delta_ws) > 0:
+            change_points = edges[1:]  # Skip the first edge as it has no preceding delta
+            plt.stem(change_points, delta_ws, linefmt='C1-', markerfmt='C1o', basefmt='C1-', label='Delta W', use_line_collection=True)
+        
+        plt.xlabel('Time (seconds)')
+        plt.ylabel('Activity / Poisson Rate')
+        plt.title('Key Press Activity with Bayesian Blocks Change Points and Poisson Rates')
+        plt.legend()
+        plt.show()
+    else:
+        print("No key presses were recorded.")
+
+if __name__ == "__main__":
+    main()
