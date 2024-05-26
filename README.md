@@ -62,6 +62,6 @@ This tool utilizes the Bayesian Blocks implementation from the Astropy library.
 
 Further reading
 
-I read this article more than once and then some in order to fully grasp and gain ownership of this algorithm. You don't have to do this, but I strongly recommend it. You will be better off having done so. 
+I read this article more than once and then some in order to better wield this algorithm. You don't have to do this, but I strongly recommend it. You will be better off having done so. 
 https://iopscience.iop.org/article/10.1088/0004-637X/764/2/167/pdf
 
