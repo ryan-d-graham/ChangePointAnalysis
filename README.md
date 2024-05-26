@@ -54,10 +54,14 @@ We welcome contributions! Please fork the repository and create a pull request.
 
 License
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License (LOL, just kidding). See the LICENSE file for details :P
 
 Acknowledgements
 
-This tool utilizes the Bayesian Blocks implementation from the Astropy library.
+This tool utilizes the Bayesian Blocks implementation from the Astropy library. 
 
-Feel free to adjust the README to better fit your project’s specific details and additional features.
+Further reading
+
+I read this article more than once and then some in order to fully grasp and gain ownership of this algorithm. You don't have to do this, but I strongly recommend it. You will be better off having done so. 
+https://iopscience.iop.org/article/10.1088/0004-637X/764/2/167/pdf
+
