@@ -54,7 +54,7 @@ We welcome contributions! Please fork the repository and create a pull request.
 
 License
 
-This project is licensed under the MIT License (LOL, just kidding). See the LICENSE file for details :P
+This project is licensed under the MIT License. See the LICENSE file for details :P
 
 Acknowledgements
 
