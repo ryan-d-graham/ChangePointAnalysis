@@ -9,7 +9,6 @@ This repository focuses on change point analysis, providing tools and scripts to
 3. [Projects](#projects)
    - [BayesianChangePointDetection.py](#bayesianchangepointdetectionpy)
    - [NonParametricChangePointDetection.py](#nonparametricchangepointdetectionpy)
-   - [SegmentationAnalysis.py](#segmentationanalysispy)
 4. [Usage](#usage)
 5. [Contributing](#contributing)
 6. [License](#license)
