@@ -1,4 +1,3 @@
-Here is the complete README content for your ChangePointAnalysis repository, formatted correctly in Markdown:
 
 ```markdown
 # ChangePointAnalysis
