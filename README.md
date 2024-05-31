@@ -16,7 +16,7 @@ This script performs the following tasks:
 
 1. **Data Preparation**: Processes multivariate event data, combining timestamps and weights from different variables.
 2. **Change Point Detection**: Uses the Bayesian Blocks algorithm to detect common change points across all variables.
-3. **Matrix Construction**: Constructs a matrix of weighted rates for each block and variable.
+3. **Matrix Construction**: Constructs a matrix of weighted poisson rates for each block and variable.
 4. **Non-Negative Matrix Factorization (NMF)**: Decomposes the matrix into basis and coefficient matrices using NMF.
 5. **Visualization**: Visualizes the original matrix, the basis matrix, the coefficient matrix, and the reconstructed matrix using heatmaps.
 
