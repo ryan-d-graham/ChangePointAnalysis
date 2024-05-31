@@ -59,8 +59,8 @@ This script can be used for:
 - **Pattern Recognition**: Apply NMF to identify latent factors contributing to the spread, such as demographic or environmental factors.
 
 **Benefits**:
-- **Timely Interventions**: Inform public health responses to emerging outbreaks.
-- **Policy Making**: Guide resource allocation and preventive measures based on identified patterns.
+- **Timely Interventions**: (Trigger) Inform public health responses to emerging outbreaks.
+- **Policy Making**: (Retrospective) Guide resource allocation and preventive measures based on identified patterns.
 
 #### Analyzing EEG Data
 
@@ -73,7 +73,7 @@ This script can be used for:
 - **Pattern Recognition**: Apply NMF to decompose the EEG data matrix into basis and coefficient matrices, uncovering latent patterns and components in the EEG signals.
 
 **Benefits**:
-- **Event Detection**: Identify and localize epileptic seizures, sleep stages, or cognitive events.
+- **Event Detection**: (Trigger) Identify and localize epileptic seizures, sleep stages, or cognitive events.
 - **Pattern Recognition**: Discover underlying neural patterns and rhythms.
 - **Feature Extraction**: Extract meaningful features for further analysis or machine learning applications.
 
