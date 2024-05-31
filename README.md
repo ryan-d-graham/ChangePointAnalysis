@@ -45,8 +45,8 @@ This script can be used for:
 - **Pattern Recognition**: Apply NMF to decompose the data into latent health patterns, distinguishing between normal and abnormal states.
 
 **Benefits**:
-- **Real-Time Alerts**: Prompt healthcare providers to potential health issues.
-- **Personalized Care**: Tailor interventions based on individual patient data patterns.
+- **Real-Time Alerts**: (Trigger) Prompt healthcare providers to potential health issues.
+- **Personalized Care**: (Retrospective) Tailor interventions based on individual patient data patterns.
 
 #### Epidemiology
 
