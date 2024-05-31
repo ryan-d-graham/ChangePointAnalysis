@@ -16,11 +16,24 @@ This script performs the following tasks:
 
 1. **Data Preparation**: Processes multivariate event data, combining timestamps and weights from different variables.
 2. **Change Point Detection**: Uses the Bayesian Blocks algorithm to detect common change points across all variables.
-3. **Matrix Construction**: Constructs a matrix of weighted poisson rates for each block and variable.
+3. **Matrix Construction**: Constructs a matrix of weighted rates for each block and variable.
 4. **Non-Negative Matrix Factorization (NMF)**: Decomposes the matrix into basis and coefficient matrices using NMF.
 5. **Visualization**: Visualizes the original matrix, the basis matrix, the coefficient matrix, and the reconstructed matrix using heatmaps.
 
-This script can be used for event analysis, pattern recognition, and data segmentation by identifying change points in time-series data, uncovering latent structures, and segmenting data into meaningful blocks.
+### Applications
+
+This script can be used for:
+
+1. **Event Analysis**: Identifying change points in time-series data.
+2. **Pattern Recognition**: Decomposing and analyzing multivariate data to uncover latent structures.
+3. **Data Segmentation**: Segmenting data into meaningful blocks based on event rates and visualizing the results.
+4. **Genomics**: Gene expression analysis, copy number variation detection.
+5. **Finance**: Market analysis, risk management.
+6. **Environmental Science**: Climate change detection, ecosystem monitoring.
+7. **Healthcare**: Patient monitoring, epidemiology.
+8. **Marketing and Sales**: Consumer behavior analysis, sales data analysis.
+9. **Manufacturing**: Process monitoring, equipment maintenance.
+10. **Social Sciences**: Sociological studies, political science.
 
 ## Usage
 
