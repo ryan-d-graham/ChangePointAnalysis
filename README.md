@@ -20,11 +20,11 @@ This script performs the following tasks:
 4. **Non-Negative Matrix Factorization (NMF)**: Decomposes the matrix into basis and coefficient matrices using NMF.
 5. **Visualization**: Visualizes the original matrix, the basis matrix, the coefficient matrix, and the reconstructed matrix using heatmaps.
 
-### Possible Applications
+### Applications
 
-This BB+NMF representation might be used for:
+This script can be used for:
 
-1. **Event Analysis**: Identifying change points in mv/sv time-series data.
+1. **Event Analysis**: Identifying change points in time-series data.
 2. **Pattern Recognition**: Decomposing and analyzing multivariate data to uncover latent structures.
 3. **Data Segmentation**: Segmenting data into meaningful blocks based on event rates and visualizing the results.
 4. **Genomics**: Gene expression analysis, copy number variation detection.
@@ -34,6 +34,48 @@ This BB+NMF representation might be used for:
 8. **Marketing and Sales**: Consumer behavior analysis, sales data analysis.
 9. **Manufacturing**: Process monitoring, equipment maintenance.
 10. **Social Sciences**: Sociological studies, political science.
+
+#### Patient Monitoring
+
+**Goal**: Early detection of changes in patient health status.
+
+**Implementation**:
+- **Data Collection**: Continuously monitor vital signs such as heart rate, blood pressure, and oxygen levels.
+- **Change Point Detection**: Use Bayesian Blocks to identify significant shifts in these metrics.
+- **Pattern Recognition**: Apply NMF to decompose the data into latent health patterns, distinguishing between normal and abnormal states.
+
+**Benefits**:
+- **Real-Time Alerts**: Prompt healthcare providers to potential health issues.
+- **Personalized Care**: Tailor interventions based on individual patient data patterns.
+
+#### Epidemiology
+
+**Goal**: Understand and control disease spread.
+
+**Implementation**:
+- **Data Collection**: Gather data on infection rates, recoveries, and fatalities across regions and time.
+- **Change Point Detection**: Use Bayesian Blocks to detect significant changes in disease trends.
+- **Pattern Recognition**: Apply NMF to identify latent factors contributing to the spread, such as demographic or environmental factors.
+
+**Benefits**:
+- **Timely Interventions**: Inform public health responses to emerging outbreaks.
+- **Policy Making**: Guide resource allocation and preventive measures based on identified patterns.
+
+### Bayesian Blocks: Parameter p0
+
+**p0**: The false positive rate, which determines the sensitivity of the algorithm to detecting change points.
+
+- **Increasing p0**:
+  - **Consequence**: Detects fewer change points.
+  - **Use Case**: Suitable for applications where only significant changes are of interest, reducing the risk of false positives.
+
+- **Decreasing p0**:
+  - **Consequence**: Detects more change points.
+  - **Use Case**: Suitable for applications requiring high sensitivity to changes, even if it increases the risk of false positives.
+
+- **Tuning p0**:
+  - Adjust **p0** based on the specific requirements of the application to balance sensitivity and false positive rate.
+  - Experiment with different values of **p0** to find the optimal setting for your dataset.
 
 ## Usage
 
