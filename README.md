@@ -34,6 +34,7 @@ This script can be used for:
 8. **Marketing and Sales**: Consumer behavior analysis, sales data analysis.
 9. **Manufacturing**: Process monitoring, equipment maintenance.
 10. **Social Sciences**: Sociological studies, political science.
+11. **Neuroscience**: Analyzing EEG data to detect and analyze changes in brain activity.
 
 #### Patient Monitoring
 
