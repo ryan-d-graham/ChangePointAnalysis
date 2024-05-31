@@ -20,9 +20,9 @@ This script performs the following tasks:
 4. **Non-Negative Matrix Factorization (NMF)**: Decomposes the matrix into basis and coefficient matrices using NMF.
 5. **Visualization**: Visualizes the original matrix, the basis matrix, the coefficient matrix, and the reconstructed matrix using heatmaps.
 
-### Applications
+### Possible Applications
 
-This script can be used for:
+This representation might be used for:
 
 1. **Event Analysis**: Identifying change points in time-series data.
 2. **Pattern Recognition**: Decomposing and analyzing multivariate data to uncover latent structures.
