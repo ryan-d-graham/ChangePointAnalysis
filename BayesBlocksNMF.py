@@ -13,9 +13,9 @@ timestamps = [
 
 # List of weights corresponding to the timestamps
 weights = [
-    [1, 2, 1, 2, 1, 2],  # Variable 1
-    [2, 1, 2, 1, 2, 1],  # Variable 2
-    [1, 1, 1, 1, 1, 1]   # Variable 3
+    [1, 2, 8, 2, 10, 1],  # Variable 1
+    [2, 7, 2, 3, 1, 5],  # Variable 2
+    [1, 10, 1, 15, 1, 4]   # Variable 3
 ]
 
 # Convert lists to numpy arrays for easier manipulation
@@ -67,29 +67,29 @@ fig, axes = plt.subplots(2, 2, figsize=(12, 10))
 # Original matrix V
 im1 = axes[0, 0].imshow(V, aspect='auto', cmap='inferno')
 axes[0, 0].set_title('Input to NMF: Original Matrix V')
-axes[0, 0].set_ylabel('Blocks')
-axes[0, 0].set_xlabel('Variables')
+axes[0, 0].set_xlabel('Blocks')
+axes[0, 0].set_ylabel('Variables')
 fig.colorbar(im1, ax=axes[0, 0], orientation='vertical')
 
 # Basis matrix W
 im2 = axes[0, 1].imshow(W, aspect='auto', cmap='inferno')
 axes[0, 1].set_title('Output of NMF: Basis Matrix W')
-axes[0, 1].set_ylabel('Latent Features')
-axes[0, 1].set_xlabel('Variables')
+axes[0, 1].set_xlabel('Latent Features')
+axes[0, 1].set_ylabel('Variables')
 fig.colorbar(im2, ax=axes[0, 1], orientation='vertical')
 
 # Coefficient matrix H
 im3 = axes[1, 0].imshow(H, aspect='auto', cmap='inferno')
 axes[1, 0].set_title('Output of NMF: Coefficient Matrix H')
-axes[1, 0].set_ylabel('Blocks')
-axes[1, 0].set_xlabel('Latent Features')
+axes[1, 0].set_xlabel('Blocks')
+axes[1, 0].set_ylabel('Latent Features')
 fig.colorbar(im3, ax=axes[1, 0], orientation='vertical')
 
 # Reconstructed matrix V*
 im4 = axes[1, 1].imshow(V_star, aspect='auto', cmap='inferno')
 axes[1, 1].set_title('Reconstructed Matrix V*')
-axes[1, 1].set_ylabel('Blocks')
-axes[1, 1].set_xlabel('Variables')
+axes[1, 1].set_xlabel('Blocks')
+axes[1, 1].set_ylabel('Variables')
 fig.colorbar(im4, ax=axes[1, 1], orientation='vertical')
 
 plt.tight_layout()
