@@ -18,6 +18,10 @@ weights = [
     [1, 1, 1, 1, 1, 1]   # Variable 3
 ]
 
+# Convert lists to numpy arrays for easier manipulation
+timestamps = [np.array(ts) for ts in timestamps]
+weights = [np.array(wt) for wt in weights]
+
 # Concatenate the timestamps and weights
 combined_timestamps = np.concatenate(timestamps)
 combined_weights = np.concatenate(weights)
@@ -35,8 +39,9 @@ for i in range(num_variables):
     for j in range(num_blocks):
         start, end = edges[j], edges[j + 1]
         mask = (timestamps[i] >= start) & (timestamps[i] < end)
-        if np.sum(mask) > 0:
-            V[i, j] = np.sum(weights[i][mask]) / (end - start)
+        mask_indices = np.where(mask)[0]
+        if len(mask_indices) > 0:
+            V[i, j] = np.sum(weights[i][mask_indices]) / (end - start)
 
 # Apply Non-Negative Matrix Factorization (NMF)
 model = NMF(n_components=3, init='random', random_state=0)
