@@ -48,35 +48,46 @@ model = NMF(n_components=3, init='random', random_state=0)
 W = model.fit_transform(V)
 H = model.components_
 
+# Reconstruct V* using W and H
+V_star = np.dot(W, H)
+
 # Display results
 print("Common Change Points:\n", edges)
 print("Weighted Rates Matrix V:\n", V)
 print("NMF Basis Matrix W:\n", W)
 print("NMF Coefficient Matrix H:\n", H)
+print("Reconstructed Matrix V*:\n", V_star)
 
 # Visualization using heatmaps
-fig, axes = plt.subplots(1, 3, figsize=(18, 6))
+fig, axes = plt.subplots(2, 2, figsize=(12, 10))
 
 # Original matrix V
-im1 = axes[0].imshow(V, aspect='auto', cmap='inferno')
-axes[0].set_title('Input to NMF: Original Matrix V')
-axes[0].set_xlabel('Blocks')
-axes[0].set_ylabel('Variables')
-fig.colorbar(im1, ax=axes[0], orientation='vertical')
+im1 = axes[0, 0].imshow(V, aspect='auto', cmap='inferno')
+axes[0, 0].set_title('Input to NMF: Original Matrix V')
+axes[0, 0].set_xlabel('Blocks')
+axes[0, 0].set_ylabel('Variables')
+fig.colorbar(im1, ax=axes[0, 0], orientation='vertical')
 
 # Basis matrix W
-im2 = axes[1].imshow(W, aspect='auto', cmap='inferno')
-axes[1].set_title('Output of NMF: Basis Matrix W')
-axes[1].set_xlabel('Latent Features')
-axes[1].set_ylabel('Variables')
-fig.colorbar(im2, ax=axes[1], orientation='vertical')
+im2 = axes[0, 1].imshow(W, aspect='auto', cmap='inferno')
+axes[0, 1].set_title('Output of NMF: Basis Matrix W')
+axes[0, 1].set_xlabel('Latent Features')
+axes[0, 1].set_ylabel('Variables')
+fig.colorbar(im2, ax=axes[0, 1], orientation='vertical')
 
 # Coefficient matrix H
-im3 = axes[2].imshow(H, aspect='auto', cmap='inferno')
-axes[2].set_title('Output of NMF: Coefficient Matrix H')
-axes[2].set_xlabel('Blocks')
-axes[2].set_ylabel('Latent Features')
-fig.colorbar(im3, ax=axes[2], orientation='vertical')
+im3 = axes[1, 0].imshow(H, aspect='auto', cmap='inferno')
+axes[1, 0].set_title('Output of NMF: Coefficient Matrix H')
+axes[1, 0].set_xlabel('Blocks')
+axes[1, 0].set_ylabel('Latent Features')
+fig.colorbar(im3, ax=axes[1, 0], orientation='vertical')
+
+# Reconstructed matrix V*
+im4 = axes[1, 1].imshow(V_star, aspect='auto', cmap='inferno')
+axes[1, 1].set_title('Reconstructed Matrix V*')
+axes[1, 1].set_xlabel('Blocks')
+axes[1, 1].set_ylabel('Variables')
+fig.colorbar(im4, ax=axes[1, 1], orientation='vertical')
 
 plt.tight_layout()
 plt.show()
