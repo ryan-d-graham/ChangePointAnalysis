@@ -46,8 +46,8 @@ This script can be used for:
 - **Pattern Recognition**: Apply NMF to decompose the data into latent health patterns, distinguishing between normal and abnormal states.
 
 **Benefits**:
-- **Real-Time Alerts**: Prompt healthcare providers to potential health issues.
-- **Personalized Care**: Tailor interventions based on individual patient data patterns.
+- **Real-Time Alerts**: (Trigger Mode) Prompt healthcare providers to potential health issues.
+- **Personalized Care**: (Retrospective Mode) Tailor interventions based on individual patient data patterns.
 
 #### Epidemiology
 
@@ -59,8 +59,8 @@ This script can be used for:
 - **Pattern Recognition**: Apply NMF to identify latent factors contributing to the spread, such as demographic or environmental factors.
 
 **Benefits**:
-- **Timely Interventions**: Inform public health responses to emerging outbreaks.
-- **Policy Making**: Guide resource allocation and preventive measures based on identified patterns.
+- **Timely Interventions**: (Trigger Mode) Inform public health responses to emerging outbreaks.
+- **Policy Making**: (Retrospective Mode) Guide resource allocation and preventive measures based on identified patterns.
 
 #### Neuroscience (EEG and MEAs)
 
@@ -73,9 +73,9 @@ This script can be used for:
 - **Pattern Recognition**: Apply NMF to decompose the data matrix into basis and coefficient matrices, uncovering latent neural patterns and components.
 
 **Benefits**:
-- **Event Detection**: Identify and localize epileptic seizures, sleep stages, cognitive events, or abnormal neuronal firing patterns.
-- **Pattern Recognition**: Discover underlying neural circuits and rhythms.
-- **Feature Extraction**: Extract meaningful features for further analysis or development of brain-computer interfaces and research into neurological disorders.
+- **Event Detection**: (Trigger Mode) Identify and localize epileptic seizures, sleep stages, cognitive events, or abnormal neuronal firing patterns.
+- **Pattern Recognition**: (BB+NMF) Discover underlying neural circuits and rhythms.
+- **Feature Extraction**: (BB+NMF) Extract meaningful features for further analysis or development of brain-computer interfaces and research into neurological disorders.
 
 ### Bayesian Blocks: Parameter p0
 
