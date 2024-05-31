@@ -22,7 +22,7 @@ This script performs the following tasks:
 
 ### Possible Applications
 
-This representation might be used for:
+This BB+NMF representation might be used for:
 
 1. **Event Analysis**: Identifying change points in time-series data.
 2. **Pattern Recognition**: Decomposing and analyzing multivariate data to uncover latent structures.
