@@ -22,7 +22,7 @@ This script performs the following tasks:
 
 ### Applications
 
-This script can be used for:
+This script can be used as a basis for:
 
 1. **Event Analysis**: Identifying change points in time-series data.
 2. **Pattern Recognition**: Decomposing and analyzing multivariate data to uncover latent structures.
