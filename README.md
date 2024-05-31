@@ -34,7 +34,7 @@ This script can be used for:
 8. **Marketing and Sales**: Consumer behavior analysis, sales data analysis.
 9. **Manufacturing**: Process monitoring, equipment maintenance.
 10. **Social Sciences**: Sociological studies, political science.
-11. **Neuroscience**: Analyzing EEG data to detect and analyze changes in brain activity.
+11. **Neuroscience**: Analyzing EEG and MEA data to detect and analyze changes in brain activity.
 
 #### Patient Monitoring
 
@@ -46,8 +46,8 @@ This script can be used for:
 - **Pattern Recognition**: Apply NMF to decompose the data into latent health patterns, distinguishing between normal and abnormal states.
 
 **Benefits**:
-- **Real-Time Alerts**: (Trigger) Prompt healthcare providers to potential health issues.
-- **Personalized Care**: (Retrospective) Tailor interventions based on individual patient data patterns.
+- **Real-Time Alerts**: Prompt healthcare providers to potential health issues.
+- **Personalized Care**: Tailor interventions based on individual patient data patterns.
 
 #### Epidemiology
 
@@ -59,23 +59,23 @@ This script can be used for:
 - **Pattern Recognition**: Apply NMF to identify latent factors contributing to the spread, such as demographic or environmental factors.
 
 **Benefits**:
-- **Timely Interventions**: (Trigger) Inform public health responses to emerging outbreaks.
-- **Policy Making**: (Retrospective) Guide resource allocation and preventive measures based on identified patterns.
+- **Timely Interventions**: Inform public health responses to emerging outbreaks.
+- **Policy Making**: Guide resource allocation and preventive measures based on identified patterns.
 
-#### Analyzing EEG Data
+#### Neuroscience (EEG and MEAs)
 
-**Goal**: Detect and analyze changes in brain activity over time.
+**Goal**: Detect and analyze changes in brain activity over time using EEG and Micro-electrode Arrays (MEAs).
 
 **Implementation**:
-- **Data Collection**: Record EEG signals from multiple electrodes over time.
-- **Change Point Detection**: Use Bayesian Blocks to identify significant changes in EEG signal patterns.
-- **Matrix Construction**: Construct a matrix where each row corresponds to an EEG channel and each column corresponds to a time block defined by detected change points.
-- **Pattern Recognition**: Apply NMF to decompose the EEG data matrix into basis and coefficient matrices, uncovering latent patterns and components in the EEG signals.
+- **Data Collection**: Record electrical activity from multiple electrodes over time, either from EEG or MEAs.
+- **Change Point Detection**: Use Bayesian Blocks to identify significant changes in signal patterns.
+- **Matrix Construction**: Construct a matrix where each row corresponds to an electrode (EEG channel or MEA recording) and each column corresponds to a time block defined by detected change points.
+- **Pattern Recognition**: Apply NMF to decompose the data matrix into basis and coefficient matrices, uncovering latent neural patterns and components.
 
 **Benefits**:
-- **Event Detection**: (Trigger) Identify and localize epileptic seizures, sleep stages, or cognitive events.
-- **Pattern Recognition**: Discover underlying neural patterns and rhythms.
-- **Feature Extraction**: Extract meaningful features for further analysis or machine learning applications.
+- **Event Detection**: Identify and localize epileptic seizures, sleep stages, cognitive events, or abnormal neuronal firing patterns.
+- **Pattern Recognition**: Discover underlying neural circuits and rhythms.
+- **Feature Extraction**: Extract meaningful features for further analysis or development of brain-computer interfaces and research into neurological disorders.
 
 ### Bayesian Blocks: Parameter p0
 
