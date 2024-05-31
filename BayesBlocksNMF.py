@@ -4,31 +4,29 @@ from sklearn.decomposition import NMF
 import matplotlib.pyplot as plt
 
 # Example multivariate event data
-# Matrix of timestamps (each column represents a different variable)
-timestamps = np.array([
-    [0.5, 0.7, 0.8],
-    [1.5, 1.7, 1.8],
-    [2.5, 2.7, 2.8],
-    [3.5, 3.7, 3.8],
-    [4.5, 4.7, 4.8],
-    [5.5, 5.7, 5.8]
-])
+# List of timestamps for each variable
+timestamps = [
+    [0.5, 1.5, 2.5, 3.5, 4.5, 5.5],  # Variable 1
+    [0.7, 1.7, 2.7, 3.7, 4.7, 5.7],  # Variable 2
+    [0.8, 1.8, 2.8, 3.8, 4.8, 5.8]   # Variable 3
+]
 
-# Matrix of weights corresponding to the timestamps
-weights = np.array([
-    [1, 2, 1],
-    [2, 1, 2],
-    [1, 2, 1],
-    [2, 1, 2],
-    [1, 2, 1],
-    [2, 1, 2]
-])
+# List of weights corresponding to the timestamps
+weights = [
+    [1, 2, 1, 2, 1, 2],  # Variable 1
+    [2, 1, 2, 1, 2, 1],  # Variable 2
+    [1, 1, 1, 1, 1, 1]   # Variable 3
+]
+
+# Concatenate the timestamps and weights
+combined_timestamps = np.concatenate(timestamps)
+combined_weights = np.concatenate(weights)
 
 # Apply Bayesian Blocks to find common change points for all variables
-edges = bb(t=timestamps, x=weights, p0=0.05, fitness='events')
+edges = bb(t=combined_timestamps, x=combined_weights, p0=0.05, fitness='events')
 
 # Create a matrix to store the weighted rates for each block
-num_variables = weights.shape[1]
+num_variables = len(timestamps)
 num_blocks = len(edges) - 1
 V = np.zeros((num_variables, num_blocks))
 
@@ -36,9 +34,9 @@ V = np.zeros((num_variables, num_blocks))
 for i in range(num_variables):
     for j in range(num_blocks):
         start, end = edges[j], edges[j + 1]
-        mask = (timestamps[:, i] >= start) & (timestamps[:, i] < end)
+        mask = (timestamps[i] >= start) & (timestamps[i] < end)
         if np.sum(mask) > 0:
-            V[i, j] = np.sum(weights[:, i][mask]) / (end - start)
+            V[i, j] = np.sum(weights[i][mask]) / (end - start)
 
 # Apply Non-Negative Matrix Factorization (NMF)
 model = NMF(n_components=3, init='random', random_state=0)
