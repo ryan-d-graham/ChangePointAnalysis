@@ -61,6 +61,21 @@ This script can be used for:
 - **Timely Interventions**: Inform public health responses to emerging outbreaks.
 - **Policy Making**: Guide resource allocation and preventive measures based on identified patterns.
 
+#### Analyzing EEG Data
+
+**Goal**: Detect and analyze changes in brain activity over time.
+
+**Implementation**:
+- **Data Collection**: Record EEG signals from multiple electrodes over time.
+- **Change Point Detection**: Use Bayesian Blocks to identify significant changes in EEG signal patterns.
+- **Matrix Construction**: Construct a matrix where each row corresponds to an EEG channel and each column corresponds to a time block defined by detected change points.
+- **Pattern Recognition**: Apply NMF to decompose the EEG data matrix into basis and coefficient matrices, uncovering latent patterns and components in the EEG signals.
+
+**Benefits**:
+- **Event Detection**: Identify and localize epileptic seizures, sleep stages, or cognitive events.
+- **Pattern Recognition**: Discover underlying neural patterns and rhythms.
+- **Feature Extraction**: Extract meaningful features for further analysis or machine learning applications.
+
 ### Bayesian Blocks: Parameter p0
 
 **p0**: The false positive rate, which determines the sensitivity of the algorithm to detecting change points.
