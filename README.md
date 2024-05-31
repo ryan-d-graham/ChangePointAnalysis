@@ -24,7 +24,7 @@ This script performs the following tasks:
 
 This BB+NMF representation might be used for:
 
-1. **Event Analysis**: Identifying change points in time-series data.
+1. **Event Analysis**: Identifying change points in mv/sv time-series data.
 2. **Pattern Recognition**: Decomposing and analyzing multivariate data to uncover latent structures.
 3. **Data Segmentation**: Segmenting data into meaningful blocks based on event rates and visualizing the results.
 4. **Genomics**: Gene expression analysis, copy number variation detection.
