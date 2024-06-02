@@ -23,13 +23,12 @@ This script performs the following tasks:
 #### Command-Line Arguments
 - `--data_model`: Type of data model (`events`, `regular_events`, or `measures`).
 - `--nmf_components`: Number of components for NMF.
-- `--n_iter`: Number of iterations for the randomized SVD solver.
 - `--max_iter`: Maximum number of iterations for NMF.
 - `--p0`: False alarm probability for Bayesian Blocks.
 
 #### Example Usage
 ```sh
-python BB_MatDecomp.py --data_model measures --nmf_components 4 --n_iter 10 --max_iter 300 --p0 0.05
+python BB_MatDecomp.py --data_model measures --nmf_components 4 --max_iter 300 --p0 0.05
 
 Applications
 
@@ -121,8 +120,10 @@ To detect changes in event rates using GoldSpeed, configure the script parameter
 
 Running BB_MatDecomp.py
 
-To detect common change points and analyze multivariate event data using NMF/SVD, configure the script parameters within the script itself, then run it using Python.
+To detect common change points and analyze multivariate event data using NMF, run the script using the command line arguments above.
 
 Example Output
 
 The scripts output the detected change points to the terminal and visualize results using Matplotlib.
+BayesRate and GoldSpeed both display a piecewise constant representation of weighted poisson event rates and vertical bars indicating breakpoints.
+BB_MatDecomp returns the changepoints to the terminal and displays the input matrix to nmf, the decomposition and the reconstruction using matplotlib.
