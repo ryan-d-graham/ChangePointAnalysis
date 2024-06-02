@@ -45,8 +45,8 @@ Implementation:
 
 Benefits:
 
-	•	Real-Time Detection: Quickly identify significant changes in event patterns.
-	•	In-depth Analysis: Understand underlying factors contributing to event changes.
+	•	Real-Time Detection: (Trigger BB) Quickly identify significant changes in event patterns.
+	•	In-depth Analysis: (BB+NMF) Understand underlying factors contributing to event changes.
 
 Patient Monitoring
 
@@ -60,8 +60,8 @@ Implementation:
 
 Benefits:
 
-	•	Real-Time Alerts: (Trigger Mode) Prompt healthcare providers to potential health issues.
-	•	Personalized Care: (Retrospective Mode) Tailor interventions based on individual patient data patterns.
+	•	Real-Time Alerts: (Trigger BB) Prompt healthcare providers to potential health issues.
+	•	Personalized Care: (Retrospective BB) Tailor interventions based on individual patient data patterns.
 
 Epidemiology
 
@@ -75,8 +75,8 @@ Implementation:
 
 Benefits:
 
-	•	Timely Interventions: (Trigger Mode) Inform public health responses to emerging outbreaks.
-	•	Policy Making: (Retrospective Mode) Guide resource allocation and preventive measures based on identified patterns.
+	•	Timely Interventions: (Trigger BB) Inform public health responses to emerging outbreaks.
+	•	Policy Making: (Retrospective BB) Guide resource allocation and preventive measures based on identified patterns.
 
 Neuroscience (EEG and MEAs)
 
@@ -91,9 +91,9 @@ Implementation:
 
 Benefits:
 
-	•	Event Detection: (Trigger Mode) Identify and localize epileptic seizures, sleep stages, cognitive events, or abnormal neuronal firing patterns.
-	•	Pattern Recognition: (BB+NMF) Discover underlying neural circuits and rhythms.
-	•	Feature Extraction: (BB+NMF) Extract meaningful features for further analysis or development of brain-computer interfaces and research into neurological disorders.
+	•	Event Detection: (Trigger BB) Identify and localize epileptic seizures, sleep stages, cognitive events, or abnormal neuronal firing patterns.
+	•	Pattern Recognition: (Retrospective BB) Discover underlying neural circuits and rhythms.
+	•	Feature Extraction: (BB+SVD) Extract meaningful features for further analysis or development of brain-computer interfaces and research into neurological disorders.
 
 Bayesian Blocks: Parameter p0
 
