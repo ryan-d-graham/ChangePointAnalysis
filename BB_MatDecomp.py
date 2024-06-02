@@ -101,9 +101,11 @@ def main():
     # Convert data_matrix to numpy array
     data_matrix = np.array(data_matrix)
 
-    # Check if we need to transpose the matrix
+    # Ensure the data matrix has multiple features by reshaping it correctly
     if data_matrix.ndim == 1:
-        data_matrix = data_matrix.reshape(-1, 1)
+        data_matrix = data_matrix.reshape(1, -1)
+    elif data_matrix.shape[0] < data_matrix.shape[1]:
+        data_matrix = data_matrix.T
 
     # Print the shape of the data matrix
     print(f"Shape of the data matrix: {data_matrix.shape}")
