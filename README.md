@@ -50,7 +50,7 @@ The script can be adapted for neural spike train analysis, where:
 ### How to Use
 
 1. **Load your MEA data**:
-   Modify the `load_example_data` function to load your neural spike train data, ensuring measurements are positive integers representing spike density or amplitude, and timestamps indicate spike times.
+   Modify the `load_example_data` function to load your neural spike train data, ensuring measurements are positive reals representing spike density or amplitude, and timestamps indicate spike times.
 
 2. **Run the script**:
    ```bash
