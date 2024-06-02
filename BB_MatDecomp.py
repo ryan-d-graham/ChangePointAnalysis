@@ -67,7 +67,7 @@ def main():
         flattened_timestamps = timestamps[:, i]
         flattened_measurements = measurements[:, i]
         
-        edges = bayesian_blocks(t=flattened_timestamps, x=flattened_measurements, p0=args.p0, fitness='events')
+        edges = bayesian_blocks(t=flattened_timestamps, p0=args.p0)
 
         # Create the data matrix for decomposition
         column_data = []
