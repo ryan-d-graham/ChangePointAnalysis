@@ -3,11 +3,13 @@ import numpy as np
 from astropy.stats import bayesian_blocks
 import matplotlib.pyplot as plt
 from sklearn.decomposition import NMF
+import seaborn as sns
 
 def load_example_data():
+    # Common positive real-valued timestamps for all data
     timestamps = np.array([
         [1.1, 2.1, 3.1],
-        [4.2, 4.2, 6.2],
+        [4.2, 4.2, 6.2],  # Duplicate timestamp for testing jitter
         [7.3, 8.3, 9.3],
         [10.4, 11.4, 12.4],
         [13.5, 14.5, 15.5],
@@ -17,7 +19,8 @@ def load_example_data():
         [25.9, 26.9, 27.9],
         [29.0, 30.0, 31.0]
     ])
-    
+
+    # Explicit example data for 'events'
     measurements = np.array([
         [1, 2, 3],
         [2, 3, 4],
@@ -34,6 +37,7 @@ def load_example_data():
     return timestamps, measurements
 
 def add_jitter(timestamps):
+    """Add a small jitter to repeated timestamps to ensure uniqueness."""
     jitter = 1e-9
     for i in range(timestamps.shape[1]):
         unique_timestamps, counts = np.unique(timestamps[:, i], return_counts=True)
@@ -51,54 +55,70 @@ def main():
     
     args = parser.parse_args()
 
+    # Load example data
     timestamps, measurements = load_example_data()
 
+    # Add jitter to timestamps to ensure uniqueness
     timestamps = add_jitter(timestamps)
 
-    data_matrix = []
-    for i in range(measurements.shape[1]):
+    # Combine all variables' timestamps for common time breaks
+    combined_timestamps = timestamps.flatten()
+    combined_measurements = measurements.flatten()
+
+    # Apply Bayesian Blocks on the combined data
+    edges = bayesian_blocks(t=combined_timestamps, x=combined_measurements, p0=args.p0, fitness='events')
+
+    # Create the data matrix for decomposition
+    num_variables = measurements.shape[1]
+    num_blocks = len(edges) - 1
+    data_matrix = np.zeros((num_blocks, num_variables))
+
+    for i in range(num_variables):
         flattened_timestamps = timestamps[:, i]
         flattened_measurements = measurements[:, i]
-        
-        edges = bayesian_blocks(t=flattened_timestamps, x=flattened_measurements, p0=args.p0, fitness='events')
 
-        column_data = []
-        for j in range(len(edges) - 1):
+        for j in range(num_blocks):
             start, end = edges[j], edges[j + 1]
             mask = (flattened_timestamps >= start) & (flattened_timestamps < end)
-            block_measurements = flattened_measurements[mask]
-            column_data.append(np.sum(block_measurements))
-        data_matrix.append(column_data)
+            data_matrix[j, i] = np.sum(flattened_measurements[mask])
 
-    data_matrix = np.array(data_matrix).T
-
+    # Print the shape of the data matrix
     print(f"Shape of the data matrix: {data_matrix.shape}")
 
+    # Ensure the data matrix has at least 2 columns for NMF
     if data_matrix.shape[1] < 2:
         print("Error: Data matrix has less than 2 features, NMF requires at least 2 features.")
         return
 
+    # Apply NMF
     decomposer = NMF(n_components=args.nmf_components, max_iter=args.max_iter)
     W = decomposer.fit_transform(data_matrix)
     H = decomposer.components_
 
+    # Reconstruct the matrix
     reconstructed_data = np.dot(W, H)
 
-    plt.figure(figsize=(12, 8))
+    # Plotting the results
+    plt.figure(figsize=(12, 10))
 
-    plt.subplot(3, 1, 1)
+    plt.subplot(2, 2, 1)
     plt.title('Original Data Matrix')
-    plt.imshow(data_matrix, aspect='auto', cmap='inferno')
+    sns.heatmap(data_matrix, cmap='inferno', linewidths=.5, linecolor='white')
     plt.colorbar()
 
-    plt.subplot(3, 1, 2)
+    plt.subplot(2, 2, 2)
     plt.title('Reconstructed Data Matrix')
-    plt.imshow(reconstructed_data, aspect='auto', cmap='inferno')
+    sns.heatmap(reconstructed_data, cmap='inferno', linewidths=.5, linecolor='white')
     plt.colorbar()
 
-    plt.subplot(3, 1, 3)
+    plt.subplot(2, 2, 3)
     plt.title('Basis Matrix W')
-    plt.imshow(W, aspect='auto', cmap='inferno')
+    sns.heatmap(W, cmap='inferno', linewidths=.5, linecolor='white')
+    plt.colorbar()
+
+    plt.subplot(2, 2, 4)
+    plt.title('Coefficient Matrix H')
+    sns.heatmap(H, cmap='inferno', linewidths=.5, linecolor='white')
     plt.colorbar()
 
     plt.tight_layout()
