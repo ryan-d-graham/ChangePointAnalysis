@@ -53,7 +53,7 @@ def main():
     # Apply Bayesian Blocks with the correct fitness model
     if args.data_model in ['events', 'regular_events']:
         edges = bayesian_blocks(t=flattened_timestamps, x=flattened_measurements, p0=args.p0, fitness='events')
-    else:
+    elif args.data_model == 'measures':
         edges = bayesian_blocks(t=flattened_timestamps, x=flattened_measurements, p0=args.p0, fitness='measures')
 
     # Create the data matrix for decomposition
