@@ -5,10 +5,9 @@ import matplotlib.pyplot as plt
 from sklearn.decomposition import NMF
 
 def load_example_data():
-    # Common positive real-valued timestamps for all data
     timestamps = np.array([
         [1.1, 2.1, 3.1],
-        [4.2, 4.2, 6.2],  # Duplicate timestamp for testing jitter
+        [4.2, 4.2, 6.2],
         [7.3, 8.3, 9.3],
         [10.4, 11.4, 12.4],
         [13.5, 14.5, 15.5],
@@ -18,8 +17,7 @@ def load_example_data():
         [25.9, 26.9, 27.9],
         [29.0, 30.0, 31.0]
     ])
-
-    # Explicit example data for 'events'
+    
     measurements = np.array([
         [1, 2, 3],
         [2, 3, 4],
@@ -36,7 +34,6 @@ def load_example_data():
     return timestamps, measurements
 
 def add_jitter(timestamps):
-    """Add a small jitter to repeated timestamps to ensure uniqueness."""
     jitter = 1e-9
     for i in range(timestamps.shape[1]):
         unique_timestamps, counts = np.unique(timestamps[:, i], return_counts=True)
@@ -54,13 +51,10 @@ def main():
     
     args = parser.parse_args()
 
-    # Load example data
     timestamps, measurements = load_example_data()
 
-    # Add jitter to timestamps to ensure uniqueness
     timestamps = add_jitter(timestamps)
 
-    # Apply Bayesian Blocks
     data_matrix = []
     for i in range(measurements.shape[1]):
         flattened_timestamps = timestamps[:, i]
@@ -68,7 +62,6 @@ def main():
         
         edges = bayesian_blocks(t=flattened_timestamps, x=flattened_measurements, p0=args.p0, fitness='events')
 
-        # Create the data matrix for decomposition
         column_data = []
         for j in range(len(edges) - 1):
             start, end = edges[j], edges[j + 1]
@@ -77,26 +70,20 @@ def main():
             column_data.append(np.sum(block_measurements))
         data_matrix.append(column_data)
 
-    # Convert data_matrix to numpy array and ensure proper shape
     data_matrix = np.array(data_matrix).T
 
-    # Print the shape of the data matrix
     print(f"Shape of the data matrix: {data_matrix.shape}")
 
-    # Ensure the data matrix has at least 2 columns for NMF
     if data_matrix.shape[1] < 2:
         print("Error: Data matrix has less than 2 features, NMF requires at least 2 features.")
         return
 
-    # Apply NMF
     decomposer = NMF(n_components=args.nmf_components, max_iter=args.max_iter)
     W = decomposer.fit_transform(data_matrix)
     H = decomposer.components_
 
-    # Reconstruct the matrix
     reconstructed_data = np.dot(W, H)
 
-    # Plotting the results
     plt.figure(figsize=(12, 8))
 
     plt.subplot(3, 1, 1)
