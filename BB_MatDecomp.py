@@ -5,14 +5,48 @@ import matplotlib.pyplot as plt
 from sklearn.decomposition import NMF, TruncatedSVD
 
 def load_example_data(data_model):
+    # Common positive real-valued timestamps for all data
+    timestamps = np.array([
+        [1.1, 2.1, 3.1],
+        [4.2, 5.2, 6.2],
+        [7.3, 8.3, 9.3],
+        [10.4, 11.4, 12.4],
+        [13.5, 14.5, 15.5],
+        [16.6, 17.6, 18.6],
+        [19.7, 20.7, 21.7],
+        [22.8, 23.8, 24.8],
+        [25.9, 26.9, 27.9],
+        [29.0, 30.0, 31.0]
+    ])
+
     if data_model in ['events', 'regular_events']:
-        # Generate example data with positive integers for 'events' and 'regular_events'
-        timestamps = np.cumsum(np.random.poisson(5, size=(100, 3)), axis=0)
-        measurements = np.random.randint(1, 10, size=(100, 3))  # Ensure positive integers
+        # Explicit example data for 'events' and 'regular_events'
+        measurements = np.array([
+            [1, 2, 3],
+            [2, 3, 4],
+            [3, 4, 5],
+            [4, 5, 6],
+            [5, 6, 7],
+            [6, 7, 8],
+            [7, 8, 9],
+            [8, 9, 10],
+            [9, 10, 11],
+            [10, 11, 12]
+        ])
     elif data_model == 'measures':
-        # Generate example data with real numbers for 'measures'
-        timestamps = np.cumsum(np.random.uniform(0, 5, size=(100, 3)), axis=0)
-        measurements = np.random.randn(100, 3)  # Real numbers, can include negatives
+        # Explicit example data for 'measures' with real numbers and negatives
+        measurements = np.array([
+            [1.1, -2.2, 3.3],
+            [-4.4, 5.5, -6.6],
+            [7.7, -8.8, 9.9],
+            [-1.1, 2.2, -3.3],
+            [4.4, -5.5, 6.6],
+            [-7.7, 8.8, -9.9],
+            [1.1, -2.2, 3.3],
+            [-4.4, 5.5, -6.6],
+            [7.7, -8.8, 9.9],
+            [-1.1, 2.2, -3.3]
+        ])
     return timestamps, measurements
 
 def add_jitter(timestamps):
@@ -64,8 +98,20 @@ def main():
         block_measurements = flattened_measurements[mask]
         data_matrix.append(np.sum(block_measurements))
 
-    # Reshape the data matrix
-    data_matrix = np.array(data_matrix).reshape(-1, len(edges) - 1)
+    # Convert data_matrix to numpy array
+    data_matrix = np.array(data_matrix)
+
+    # Check if we need to transpose the matrix
+    if data_matrix.ndim == 1:
+        data_matrix = data_matrix.reshape(-1, 1)
+
+    # Print the shape of the data matrix
+    print(f"Shape of the data matrix: {data_matrix.shape}")
+
+    # Ensure the data matrix has at least 2 columns for TruncatedSVD
+    if data_matrix.shape[1] < 2:
+        print("Error: Data matrix has less than 2 features, TruncatedSVD requires at least 2 features.")
+        return
 
     # Apply matrix decomposition
     if args.data_model == 'measures':
