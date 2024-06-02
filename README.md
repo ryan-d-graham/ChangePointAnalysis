@@ -22,7 +22,7 @@ This script performs the following tasks:
 
 #### Command-Line Arguments
 - `--data_model`: Type of data model (`events`, `regular_events`, or `measures`).
-- `--n_components`: Number of components for NMF.
+- `--nmf_components`: Number of components for NMF.
 - `--n_iter`: Number of iterations for the randomized SVD solver.
 - `--max_iter`: Maximum number of iterations for NMF.
 - `--p0`: False alarm probability for Bayesian Blocks.
