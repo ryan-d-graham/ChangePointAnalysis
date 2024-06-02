@@ -6,7 +6,6 @@ from sklearn.decomposition import NMF
 import seaborn as sns
 
 def load_example_data():
-    # Common positive real-valued timestamps for all data
     timestamps = np.array([
         [1.1, 2.1, 3.1],
         [4.2, 4.2, 6.2],  # Duplicate timestamp for testing jitter
@@ -19,8 +18,7 @@ def load_example_data():
         [25.9, 26.9, 27.9],
         [29.0, 30.0, 31.0]
     ])
-
-    # Explicit example data for 'events'
+    
     measurements = np.array([
         [1, 2, 3],
         [2, 3, 4],
