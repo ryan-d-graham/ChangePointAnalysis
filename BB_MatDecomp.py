@@ -2,8 +2,7 @@ import argparse
 import numpy as np
 from astropy.stats import bayesian_blocks
 import matplotlib.pyplot as plt
-from sklearn.decomposition import NMF
-from sklearn.decomposition import TruncatedSVD
+from sklearn.decomposition import NMF, TruncatedSVD
 
 def load_example_data(data_model):
     if data_model in ['events', 'regular_events']:
@@ -62,6 +61,7 @@ def main():
         block_measurements = flattened_measurements[mask]
         data_matrix.append(np.sum(block_measurements))
 
+    # Reshape the data matrix
     data_matrix = np.array(data_matrix).reshape(-1, len(edges) - 1)
 
     # Apply matrix decomposition
