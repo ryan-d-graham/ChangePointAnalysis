@@ -21,7 +21,7 @@ This script performs the following tasks:
 5. **Visualization**: Visualizes the original matrix, the basis matrix, the coefficient matrix, and the reconstructed matrix using heatmaps.
 
 #### Command-Line Arguments
-- `--data_model`: Type of data model (`events`, `regular_events`, or `measures`).
+- `--random_state`: Random state for reproducibility.
 - `--nmf_components`: Number of components for NMF.
 - `--max_iter`: Maximum number of iterations for NMF.
 - `--p0`: False alarm probability for Bayesian Blocks.
