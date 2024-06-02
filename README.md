@@ -26,6 +26,36 @@ This script performs the following tasks:
 - `--max_iter`: Maximum number of iterations for NMF.
 - `--p0`: False alarm probability for Bayesian Blocks.
 
+## Application to Neural Spike Train (MEA) Data
+
+The script can be adapted for neural spike train analysis, where:
+- **Timestamps**: Indicate the time of each spike's maximum.
+- **Measurements**: Represent the density or amplitude of spikes.
+
+### Key Matrices
+
+- **Original Matrix (V)**: Represents the weighted neural activity rates across time blocks.
+- **Basis Matrix (W)**: Captures underlying patterns across neurons/channels.
+- **Coefficient Matrix (H)**: Shows how these patterns vary over time.
+- **Reconstructed Matrix (V*)**: Validates the decomposition accuracy.
+
+### Steps for Analysis
+
+1. **Spike Detection and Sorting**: Ensure accurate detection and sorting of spikes.
+2. **Data Preprocessing**: Normalize weights and timestamps.
+3. **Matrix Construction**: Create the matrix `V`.
+4. **Bayesian Blocks**: Identify significant change points.
+5. **NMF Analysis**: Perform NMF to extract matrices `W` and `H`.
+
+### How to Use
+
+1. **Load your MEA data**:
+   Modify the `load_example_data` function to load your neural spike train data, ensuring measurements are positive integers representing spike density or amplitude, and timestamps indicate spike times.
+
+2. **Run the script**:
+   ```bash
+   python script.py --nmf_components 3 --nmf_max_iter 200 --p0 0.05 --random_state 0
+
 #### Example Usage
 ```sh
 python BB_MatDecomp.py --random_state 0 --nmf_components 3 --max_iter 300 --p0 0.05
