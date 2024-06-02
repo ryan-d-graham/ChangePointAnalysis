@@ -50,12 +50,11 @@ def main():
     flattened_timestamps = timestamps.flatten()
     flattened_measurements = measurements.flatten()
 
-    # Validate input for Bayesian Blocks based on the data model
-    if args.data_model in ['events', 'regular_events'] and not np.all(flattened_measurements == flattened_measurements.astype(int)):
-        raise ValueError("X must be integer counts for fitness 'events'.")
-
-    # Apply Bayesian Blocks
-    edges = bayesian_blocks(t=flattened_timestamps, x=flattened_measurements, p0=args.p0)
+    # Apply Bayesian Blocks with the correct fitness model
+    if args.data_model in ['events', 'regular_events']:
+        edges = bayesian_blocks(t=flattened_timestamps, x=flattened_measurements, p0=args.p0, fitness='events')
+    else:
+        edges = bayesian_blocks(t=flattened_timestamps, x=flattened_measurements, p0=args.p0, fitness='measures')
 
     # Create the data matrix for decomposition
     data_matrix = []
