@@ -17,19 +17,19 @@ This script performs the following tasks:
 1. **Data Preparation**: Processes multivariate event data, combining timestamps and weights from different variables.
 2. **Change Point Detection**: Uses the Bayesian Blocks algorithm to detect common change points across all variables.
 3. **Matrix Construction**: Constructs a matrix of weighted rates for each block and variable.
-4. **Matrix Decomposition**: Decomposes the matrix into basis and coefficient matrices using Non-Negative Matrix Factorization (NMF) or Singular Value Decomposition (SVD).
+4. **Matrix Decomposition**: Decomposes the matrix into basis and coefficient matrices using Non-Negative Matrix Factorization (NMF).
 5. **Visualization**: Visualizes the original matrix, the basis matrix, the coefficient matrix, and the reconstructed matrix using heatmaps.
 
 #### Command-Line Arguments
 - `--data_model`: Type of data model (`events`, `regular_events`, or `measures`).
-- `--n_components`: Number of components for NMF/SVD.
+- `--n_components`: Number of components for NMF.
 - `--n_iter`: Number of iterations for the randomized SVD solver.
 - `--max_iter`: Maximum number of iterations for NMF.
 - `--p0`: False alarm probability for Bayesian Blocks.
 
 #### Example Usage
 ```sh
-python BB_MatDecomp.py --data_model measures --n_components 4 --n_iter 10 --max_iter 300 --p0 0.05
+python BB_MatDecomp.py --data_model measures --nmf_components 4 --n_iter 10 --max_iter 300 --p0 0.05
 
 Applications
 
@@ -71,7 +71,7 @@ Implementation:
 
 	•	Data Collection: Gather data on infection rates, recoveries, and fatalities across regions and time.
 	•	Change Point Detection: Use Bayesian Blocks to detect significant changes in disease trends.
-	•	Pattern Recognition: Apply NMF/SVD to identify latent factors contributing to the spread, such as demographic or environmental factors.
+	•	Pattern Recognition: Apply NMF to identify latent factors contributing to the spread, such as demographic or environmental factors.
 
 Benefits:
 
@@ -87,13 +87,13 @@ Implementation:
 	•	Data Collection: Record electrical activity from multiple electrodes over time, either from EEG or MEAs.
 	•	Change Point Detection: Use Bayesian Blocks to identify significant changes in signal patterns.
 	•	Matrix Construction: Construct a matrix where each row corresponds to an electrode (EEG channel or MEA recording) and each column corresponds to a time block defined by detected change points.
-	•	Pattern Recognition: Apply NMF/SVD to decompose the data matrix into basis and coefficient matrices, uncovering latent neural patterns and components.
+	•	Pattern Recognition: Apply NMF to decompose the data matrix into basis and coefficient matrices, uncovering latent neural patterns and components.
 
 Benefits:
 
 	•	Event Detection: (Trigger BB) Identify and localize epileptic seizures, sleep stages, cognitive events, or abnormal neuronal firing patterns.
 	•	Pattern Recognition: (Retrospective BB) Discover underlying neural circuits and rhythms.
-	•	Feature Extraction: (BB+SVD) Extract meaningful features for further analysis or development of brain-computer interfaces and research into neurological disorders.
+	•	Feature Extraction: (BB+NMF) Extract meaningful features for further analysis or development of brain-computer interfaces and research into neurological disorders.
 
 Bayesian Blocks: Parameter p0
 
