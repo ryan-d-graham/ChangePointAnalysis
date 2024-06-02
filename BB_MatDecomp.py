@@ -16,6 +16,17 @@ def load_example_data(data_model):
         measurements = np.random.randn(100, 3)  # Real numbers, can include negatives
     return timestamps, measurements
 
+def add_jitter(timestamps):
+    """Add a small jitter to repeated timestamps to ensure uniqueness."""
+    jitter = 1e-9
+    for i in range(timestamps.shape[1]):
+        unique_timestamps, counts = np.unique(timestamps[:, i], return_counts=True)
+        duplicates = unique_timestamps[counts > 1]
+        for dup in duplicates:
+            dup_indices = np.where(timestamps[:, i] == dup)[0]
+            timestamps[dup_indices, i] += np.linspace(0, jitter * len(dup_indices), len(dup_indices))
+    return timestamps
+
 def main():
     parser = argparse.ArgumentParser(description='Bayesian Blocks and Matrix Decomposition')
     parser.add_argument('--data_model', type=str, required=True, choices=['events', 'regular_events', 'measures'], help='Type of data model to use')
@@ -32,6 +43,9 @@ def main():
     # Process data and ensure correct format for 'events' and 'regular_events'
     if args.data_model in ['events', 'regular_events']:
         measurements = np.abs(np.ceil(measurements)).astype(int)  # Ensure positive integers
+
+    # Add jitter to timestamps to ensure uniqueness
+    timestamps = add_jitter(timestamps)
 
     # Flatten the timestamps and measurements for Bayesian Blocks input
     flattened_timestamps = timestamps.flatten()
