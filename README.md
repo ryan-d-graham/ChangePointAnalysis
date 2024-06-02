@@ -28,7 +28,7 @@ This script performs the following tasks:
 
 #### Example Usage
 ```sh
-python BB_MatDecomp.py --data_model measures --nmf_components 4 --max_iter 300 --p0 0.05
+python BB_MatDecomp.py --random_state 0 --nmf_components 3 --max_iter 300 --p0 0.05
 
 Applications
 
