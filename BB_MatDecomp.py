@@ -65,6 +65,11 @@ def main():
     combined_timestamps = timestamps.flatten()
     combined_measurements = measurements.flatten()
 
+    # Sort the combined arrays to maintain order
+    sorted_indices = np.argsort(combined_timestamps)
+    combined_timestamps = combined_timestamps[sorted_indices]
+    combined_measurements = combined_measurements[sorted_indices]
+
     # Apply Bayesian Blocks on the combined data
     edges = bayesian_blocks(t=combined_timestamps, x=combined_measurements, p0=args.p0, fitness='events')
 
