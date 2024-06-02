@@ -42,7 +42,7 @@ The script can be adapted for neural spike train analysis, where:
 ### Steps for Analysis
 
 1. **Spike Detection and Sorting**: Ensure accurate detection and sorting of spikes.
-2. **Data Preprocessing**: Normalize weights and timestamps.
+2. **Data Preprocessing**: Optionally Normalize weights and/or timestamps.
 3. **Matrix Construction**: Create the matrix `V`.
 4. **Bayesian Blocks**: Identify significant change points.
 5. **NMF Analysis**: Perform NMF to extract matrices `W` and `H`.
