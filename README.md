@@ -40,7 +40,7 @@ Implementation:
 
 	•	Data Collection: Collect event data over time.
 	•	Change Point Detection: Use Bayesian Blocks to identify significant changes in event rates.
-	•	Pattern Recognition: Apply NMF/SVD to uncover latent structures in the data.
+	•	Pattern Recognition: Apply NMF to uncover latent structures in the data.
 
 Benefits:
 
@@ -55,7 +55,7 @@ Implementation:
 
 	•	Data Collection: Continuously monitor vital signs such as heart rate, blood pressure, and oxygen levels.
 	•	Change Point Detection: Use Bayesian Blocks to identify significant shifts in these metrics.
-	•	Pattern Recognition: Apply NMF/SVD to decompose the data into latent health patterns, distinguishing between normal and abnormal states.
+	•	Pattern Recognition: Apply NMF to decompose the data into latent health patterns, distinguishing between normal and abnormal states.
 
 Benefits:
 
@@ -77,15 +77,15 @@ Benefits:
 	•	Timely Interventions: (Trigger BB) Inform public health responses to emerging outbreaks.
 	•	Policy Making: (Retrospective BB) Guide resource allocation and preventive measures based on identified patterns.
 
-Neuroscience (EEG and MEAs)
+Neuroscience (MEAs)
 
-Goal: Detect and analyze changes in brain activity over time using EEG and Micro-electrode Arrays (MEAs).
+Goal: Detect and analyze changes in brain activity over time using Micro-electrode Arrays (MEAs).
 
 Implementation:
 
-	•	Data Collection: Record electrical activity from multiple electrodes over time, either from EEG or MEAs.
+	•	Data Collection: Record electrical activity from multiple electrodes over time from MEAs and process this into timestamped and weighted neural spike-train data. 
 	•	Change Point Detection: Use Bayesian Blocks to identify significant changes in signal patterns.
-	•	Matrix Construction: Construct a matrix where each row corresponds to an electrode (EEG channel or MEA recording) and each column corresponds to a time block defined by detected change points.
+	•	Matrix Construction: Construct a matrix where each row corresponds to an electrode (MEA recording) and each column corresponds to a time block defined by detected change points.
 	•	Pattern Recognition: Apply NMF to decompose the data matrix into basis and coefficient matrices, uncovering latent neural patterns and components.
 
 Benefits:
@@ -127,3 +127,5 @@ Example Output
 The scripts output the detected change points to the terminal and visualize results using Matplotlib.
 BayesRate and GoldSpeed both display a piecewise constant representation of weighted poisson event rates and vertical bars indicating breakpoints.
 BB_MatDecomp returns the changepoints to the terminal and displays the input matrix to nmf, the decomposition and the reconstruction using matplotlib.
+
+Nota Bene on the Neuroscience Applications: 
