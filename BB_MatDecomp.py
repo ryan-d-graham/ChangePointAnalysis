@@ -1,110 +1,84 @@
-import numpy as np
-import seaborn as sns
-import matplotlib.pyplot as plt
-from sklearn.decomposition import NMF, TruncatedSVD
-from astropy.stats import bayesian_blocks
 import argparse
+import numpy as np
+from astropy.stats import bayesian_blocks
+import matplotlib.pyplot as plt
+from sklearn.decomposition import NMF
+from sklearn.decomposition import TruncatedSVD
 
-def parse_arguments():
-    parser = argparse.ArgumentParser(description='Bayesian Blocks and NMF/SVD Analysis')
-    parser.add_argument('--data_model', type=str, choices=['events', 'regular_events', 'measures'], default='measures', 
-                        help='Bayesian Blocks data model type: events, regular_events, or measures')
-    parser.add_argument('--n_components', type=int, default=3, help='Number of components for NMF/SVD')
-    parser.add_argument('--max_iter', type=int, default=200, help='Maximum number of iterations for NMF')
-    return parser.parse_args()
-
-def load_example_data():
-    # Example data setup with heterogeneous timestamps and real numbers (including negatives) for measurements
-    timestamps = np.array([
-        [0.1, 0.15, 0.12],
-        [0.21, 0.27, 0.25],
-        [0.33, 0.31, 0.38],
-        [0.41, 0.45, 0.47],
-        [0.53, 0.52, 0.56]
-    ])
-    measurements = np.array([
-        [10.1, -15.2, 12.3],
-        [-12.4, 17.5, -14.6],
-        [11.7, -16.8, 13.9],
-        [-13.3, 18.1, -15.4],
-        [14.5, -19.6, 16.7]
-    ])
+def load_example_data(data_model):
+    if data_model in ['events', 'regular_events']:
+        # Generate example data with positive integers for 'events' and 'regular_events'
+        timestamps = np.cumsum(np.random.poisson(5, size=(100, 3)), axis=0)
+        measurements = np.random.randint(1, 10, size=(100, 3))  # Ensure positive integers
+    elif data_model == 'measures':
+        # Generate example data with real numbers for 'measures'
+        timestamps = np.cumsum(np.random.uniform(0, 5, size=(100, 3)), axis=0)
+        measurements = np.random.randn(100, 3)  # Real numbers, can include negatives
     return timestamps, measurements
 
 def main():
-    args = parse_arguments()
-    
-    # Load example data
-    timestamps, measurements = load_example_data()
+    parser = argparse.ArgumentParser(description='Bayesian Blocks and Matrix Decomposition')
+    parser.add_argument('--data_model', type=str, required=True, choices=['events', 'regular_events', 'measures'], help='Type of data model to use')
+    parser.add_argument('--n_components', type=int, required=True, help='Number of components for NMF/SVD')
+    parser.add_argument('--n_iter', type=int, default=5, help='Number of iterations for the randomized SVD solver')
+    parser.add_argument('--max_iter', type=int, default=200, help='Maximum number of iterations for NMF')
+    parser.add_argument('--p0', type=float, default=0.05, help='False alarm probability for Bayesian Blocks')
 
-    # Flatten the data for Bayesian Blocks input
-    time_tags = timestamps.flatten()
-    measurements_flat = measurements.flatten()
+    args = parser.parse_args()
 
-    # Apply Bayesian Blocks to find change points
-    edges = bayesian_blocks(t=time_tags, x=measurements_flat, fitness=args.data_model)
-    print("Detected change points:", edges)
+    # Load example data based on the chosen data model
+    timestamps, measurements = load_example_data(args.data_model)
 
-    # Create a matrix to store the weighted rates for each block
-    num_variables = measurements.shape[1]
-    num_blocks = len(edges) - 1
-    V = np.zeros((num_variables, num_blocks))
+    # Process data and ensure correct format for 'events' and 'regular_events'
+    if args.data_model in ['events', 'regular_events']:
+        measurements = np.abs(np.ceil(measurements)).astype(int)  # Ensure positive integers
 
-    # Calculate the weighted rate for each variable in each block
-    for i in range(num_variables):
-        for j in range(num_blocks):
-            start, end = edges[j], edges[j + 1]
-            mask = (timestamps[:, i] >= start) & (timestamps[:, i] < end)
-            duration = end - start
-            if np.sum(mask) > 0 and duration > 0:
-                V[i, j] = np.sum(measurements[mask, i]) / duration
-            else:
-                V[i, j] = 0  # Handle zero counts or zero duration safely
+    # Flatten the timestamps and measurements for Bayesian Blocks input
+    flattened_timestamps = timestamps.flatten()
+    flattened_measurements = measurements.flatten()
 
-    # Apply SVD or NMF based on the data model
+    # Apply Bayesian Blocks
+    edges = bayesian_blocks(t=flattened_timestamps, x=flattened_measurements, p0=args.p0)
+
+    # Create the data matrix for decomposition
+    data_matrix = []
+    for i in range(len(edges) - 1):
+        start, end = edges[i], edges[i + 1]
+        mask = (flattened_timestamps >= start) & (flattened_timestamps < end)
+        block_measurements = flattened_measurements[mask]
+        data_matrix.append(np.sum(block_measurements))
+
+    data_matrix = np.array(data_matrix).reshape(-1, len(edges) - 1)
+
+    # Apply matrix decomposition
     if args.data_model == 'measures':
-        # Use SVD for real-valued data
-        svd = TruncatedSVD(n_components=args.n_components)
-        W = svd.fit_transform(V)
-        H = svd.components_
-        V_star = np.dot(W, H)
+        decomposer = TruncatedSVD(n_components=args.n_components, n_iter=args.n_iter)
     else:
-        # Use NMF for count data
-        nmf = NMF(n_components=args.n_components, max_iter=args.max_iter, init='random', random_state=0)
-        W = nmf.fit_transform(V)
-        H = nmf.components_
-        V_star = np.dot(W, H)
+        decomposer = NMF(n_components=args.n_components, max_iter=args.max_iter)
 
-    # Visualization using seaborn heatmaps with borders and integer axis ticks
-    fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+    W = decomposer.fit_transform(data_matrix)
+    H = decomposer.components_
 
-    # Original matrix V
-    sns.heatmap(V, ax=axes[0, 0], cmap='inferno', linewidths=.5, linecolor='white', cbar=True, 
-                xticklabels=np.arange(1, V.shape[1] + 1), yticklabels=np.arange(1, V.shape[0] + 1))
-    axes[0, 0].set_title('Input to NMF/SVD: Original Matrix V')
-    axes[0, 0].set_ylabel('Variables')
-    axes[0, 0].set_xlabel('Blocks')
+    # Reconstruct the matrix
+    reconstructed_data = np.dot(W, H)
 
-    # Basis matrix W
-    sns.heatmap(W, ax=axes[0, 1], cmap='inferno', linewidths=.5, linecolor='white', cbar=True, 
-                xticklabels=np.arange(1, W.shape[1] + 1), yticklabels=np.arange(1, W.shape[0] + 1))
-    axes[0, 1].set_title('Output of NMF/SVD: Basis Matrix W')
-    axes[0, 1].set_ylabel('Variables')
-    axes[0, 1].set_xlabel('Latent Features')
+    # Plotting the results
+    plt.figure(figsize=(12, 8))
 
-    # Coefficient matrix H
-    sns.heatmap(H, ax=axes[1, 0], cmap='inferno', linewidths=.5, linecolor='white', cbar=True, 
-                xticklabels=np.arange(1, H.shape[1] + 1), yticklabels=np.arange(1, H.shape[0] + 1))
-    axes[1, 0].set_title('Output of NMF/SVD: Coefficient Matrix H')
-    axes[1, 0].set_ylabel('Latent Features')
-    axes[1, 0].set_xlabel('Blocks')
+    plt.subplot(3, 1, 1)
+    plt.title('Original Data Matrix')
+    plt.imshow(data_matrix, aspect='auto', cmap='inferno')
+    plt.colorbar()
 
-    # Reconstructed matrix V*
-    sns.heatmap(V_star, ax=axes[1, 1], cmap='inferno', linewidths=.5, linecolor='white', cbar=True, 
-                xticklabels=np.arange(1, V_star.shape[1] + 1), yticklabels=np.arange(1, V_star.shape[0] + 1))
-    axes[1, 1].set_title('Reconstructed Matrix V*')
-    axes[1, 1].set_ylabel('Variables')
-    axes[1, 1].set_xlabel('Blocks')
+    plt.subplot(3, 1, 2)
+    plt.title('Reconstructed Data Matrix')
+    plt.imshow(reconstructed_data, aspect='auto', cmap='inferno')
+    plt.colorbar()
+
+    plt.subplot(3, 1, 3)
+    plt.title('Basis Matrix W')
+    plt.imshow(W, aspect='auto', cmap='inferno')
+    plt.colorbar()
 
     plt.tight_layout()
     plt.show()
