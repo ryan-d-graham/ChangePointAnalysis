@@ -54,7 +54,7 @@ The script can be adapted for neural spike train analysis, where:
 
 2. **Run the script**:
    ```bash
-   python script.py --nmf_components 3 --nmf_max_iter 200 --p0 0.05 --random_state 0
+   python BB_MatDecomp.py --nmf_components 3 --nmf_max_iter 200 --p0 0.05 --random_state 0
 
 #### Example Usage
 ```sh
