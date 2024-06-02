@@ -1,14 +1,12 @@
-import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.decomposition import NMF
 from astropy.stats import bayesian_blocks
+import numpy as np
 import argparse
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Bayesian Blocks and NMF Analysis')
-    parser.add_argument('--data_model', type=str, choices=['events', 'regular_events', 'measures'], default='measures', 
-                        help='Bayesian Blocks data model type: events, regular_events, or measures')
     parser.add_argument('--nmf_components', type=int, default=3, help='Number of NMF components')
     parser.add_argument('--nmf_max_iter', type=int, default=200, help='Maximum number of NMF iterations')
     parser.add_argument('--p0', type=float, default=0.05, help='False positive rate of bayesian_blocks')
@@ -42,8 +40,8 @@ def main():
     time_tags = timestamps.flatten()
     measurements_flat = measurements.flatten()
 
-    # Apply Bayesian Blocks to find change points
-    edges = bayesian_blocks(t=time_tags, x=measurements_flat, fitness=args.data_model)
+    # Apply Bayesian Blocks to find change points using the "events" data model
+    edges = bayesian_blocks(t=time_tags, x=measurements_flat, fitness='events', p0=args.p0)
     print("Detected change points:", edges)
 
     # Create a matrix to store the weighted rates for each block
