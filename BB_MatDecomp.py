@@ -51,7 +51,6 @@ def main():
     parser.add_argument('--nmf_components', type=int, required=True, help='Number of components for NMF')
     parser.add_argument('--max_iter', type=int, default=200, help='Maximum number of iterations for NMF')
     parser.add_argument('--p0', type=float, default=0.05, help='False alarm probability for Bayesian Blocks')
-    parser.add_argument('--random_state', type=int, default=42, help='Random state for reproducibility')
     
     args = parser.parse_args()
 
@@ -67,7 +66,7 @@ def main():
         flattened_timestamps = timestamps[:, i]
         flattened_measurements = measurements[:, i]
         
-        edges = bayesian_blocks(t=flattened_timestamps, p0=args.p0)
+        edges = bayesian_blocks(t=flattened_timestamps, x=flattened_measurements, p0=args.p0, fitness='events')
 
         # Create the data matrix for decomposition
         column_data = []
@@ -90,7 +89,7 @@ def main():
         return
 
     # Apply NMF
-    decomposer = NMF(n_components=args.nmf_components, max_iter=args.max_iter, random_state=args.random_state)
+    decomposer = NMF(n_components=args.nmf_components, max_iter=args.max_iter)
     W = decomposer.fit_transform(data_matrix)
     H = decomposer.components_
 
