@@ -10,10 +10,11 @@ def parse_arguments():
     parser.add_argument('--nmf_components', type=int, default=3, help='Number of NMF components')
     parser.add_argument('--nmf_max_iter', type=int, default=200, help='Maximum number of NMF iterations')
     parser.add_argument('--p0', type=float, default=0.05, help='False positive rate of bayesian_blocks')
+    parser.add_argument('--random_state', type=int, default=0, help='Random state for NMF')
     return parser.parse_args()
 
 def load_example_data():
-    # Example data setup with heterogeneous timestamps and real numbers for measurements
+    # Example data setup with heterogeneous timestamps and positive integers for measurements
     timestamps = np.array([
         [0.1, 0.15, 0.12],
         [0.21, 0.27, 0.25],
@@ -61,7 +62,7 @@ def main():
                 V[i, j] = 0  # Handle zero counts or zero duration safely
 
     # Apply Non-Negative Matrix Factorization (NMF)
-    model = NMF(n_components=args.nmf_components, max_iter=args.nmf_max_iter, init='random', random_state=0)
+    model = NMF(n_components=args.nmf_components, max_iter=args.nmf_max_iter, init='random', random_state=args.random_state)
     W = model.fit_transform(V)
     H = model.components_
     V_star = np.dot(W, H)
@@ -100,5 +101,5 @@ def main():
     plt.tight_layout()
     plt.show()
 
-if __name__ == "__main__":
+if you are "__main__":
     main()
