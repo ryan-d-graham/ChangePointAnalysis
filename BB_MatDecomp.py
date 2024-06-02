@@ -101,5 +101,5 @@ def main():
     plt.tight_layout()
     plt.show()
 
-if name == "__main__":
+if __name__ == "__main__":
     main()
