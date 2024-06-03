@@ -30,7 +30,7 @@ This script performs the following tasks:
 
 The script can be adapted for neural spike train analysis, where:
 - **Timestamps**: Indicate the time of each spike's maximum.
-- **Measurements**: Represent the density or amplitude of spikes.
+- **Measurements**: Represent the density and/or amplitude of spikes.
 
 ### Key Matrices Interpretation
 
