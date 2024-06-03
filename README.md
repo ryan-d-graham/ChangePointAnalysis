@@ -156,4 +156,4 @@ Example Output
 
 The scripts output the detected change points to the terminal and visualize results using Matplotlib.
 BayesRate and GoldSpeed both display a piecewise constant representation of weighted poisson event rates and vertical bars indicating breakpoints.
-BB_MatDecomp returns the changepoints to the terminal and displays the input matrix to nmf, the decomposition and the reconstruction using matplotlib.
+BB_MatDecomp returns the changepoints to the terminal and displays the input matrix to nmf, the decomposition and the reconstruction using matplotlib and seaborn.
