@@ -35,8 +35,8 @@ The script can be adapted for neural spike train analysis, where:
 ### Key Matrices Interpretation
 
 - **Original Matrix (V)**: Represents the weighted neural activity rates across time blocks.
-- **Basis Matrix (W)**: Captures underlying patterns across neurons/channels and latent features representing groups of neurons with similar activity. Columns of (W) show which neurons form these clusters, highlighting functional neural circuits. 
-- **Coefficient Matrix (H)**: Displays how these neural clusters' activity varies over time. Rows of (H) can identify periods where certin patterns are more prominent, clustering time blocks based on neural activity trends. 
+- **Basis Matrix (W)**: Captures underlying patterns across neurons/channels and latent features representing groups of neurons with similar activity. Columns of W show which neurons form these clusters, highlighting functional neural circuits. 
+- **Coefficient Matrix (H)**: Displays how these neural clusters' activity varies over time. Rows of H can identify periods where certin patterns are more prominent, clustering time blocks based on neural activity trends. 
 - **Reconstructed Matrix (V*)**: Validates the clustering by approximating the original data, helping to ensure the identified clusters and temporal patterns accurately represent the neural activity. 
 
 ### Steps for Analysis
