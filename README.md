@@ -32,19 +32,19 @@ The script can be adapted for neural spike train analysis, where:
 - **Timestamps**: Indicate the time of each spike's maximum.
 - **Measurements**: Represent the density or amplitude of spikes.
 
-### Key Matrices
+### Key Matrices Interpretation
 
 - **Original Matrix (V)**: Represents the weighted neural activity rates across time blocks.
-- **Basis Matrix (W)**: Captures underlying patterns across neurons/channels.
-- **Coefficient Matrix (H)**: Shows how these patterns vary over time.
-- **Reconstructed Matrix (V*)**: Validates the decomposition accuracy.
+- **Basis Matrix (W)**: Captures underlying patterns across neurons/channels and latent features representing groups of neurons with similar activity. Columns of (W) show which neurons form these clusters, highlighting functional neural circuits. 
+- **Coefficient Matrix (H)**: Displays how these neural clusters' activity varies over time. Rows of (H) can identify periods where certin patterns are more prominent, clustering time blocks based on neural activity trends. 
+- **Reconstructed Matrix (V*)**: Validates the clustering by approximating the original data, helping to ensure the identified clusters and temporal patterns accurately represent the neural activity. 
 
 ### Steps for Analysis
 
 1. **Spike Detection and Sorting**: Ensure accurate detection and sorting of spikes.
-2. **Data Preprocessing**: Optionally Normalize weights and/or timestamps.
+2. **Data Preprocessing**: Use Bayesian Blocks to find breakpoints in the distribution of spike potentials and encode the blocks categorically to use as weights.
 3. **Matrix Construction**: Create the matrix `V`.
-4. **Bayesian Blocks**: Identify significant change points.
+4. **Bayesian Blocks**: Identify significant change points and the weighted spike rates between them. 
 5. **NMF Analysis**: Perform NMF to extract matrices `W` and `H`.
 
 ### How to Use
