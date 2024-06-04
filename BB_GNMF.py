@@ -1,6 +1,6 @@
 import numpy as np
 from sklearn.neighbors import kneighbors_graph
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import MinMaxScaler
 from scipy.sparse import csgraph
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -17,8 +17,8 @@ lambdas = np.random.gamma(shape, scale, (100, 10))
 # Generate measurements using the lambda matrix for Poisson random draws
 measurements = np.random.poisson(lam=lambdas)
 
-# Standardize the matrix
-scaler = StandardScaler()
+# Normalize the matrix to ensure all values are non-negative
+scaler = MinMaxScaler()
 V_scaled = scaler.fit_transform(measurements.T)
 
 # Construct the similarity matrix using k-nearest neighbors
@@ -34,7 +34,7 @@ L = D - S
 # Regularization parameter
 alpha = 0.1
 
-# Initialize W and H
+# Initialize W and H using NMF
 nmf = NMF(n_components=3, init='random', random_state=42)
 W = nmf.fit_transform(V_scaled)
 H = nmf.components_
