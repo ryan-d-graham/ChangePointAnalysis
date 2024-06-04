@@ -41,7 +41,7 @@ The script can be adapted for neural spike train analysis, where:
 
 ## NMF Decomposition Example
 
-The image below illustrates the process of Non-Negative Matrix Factorization (NMF) applied to the example data. It shows the decomposition of the original data matrix into two component matrices and the reconstruction. 
+The image below illustrates the process of Bayesian Blocks and Non-Negative Matrix Factorization (NMF) applied to the example data. It shows the decomposition of the original data matrix into two component matrices and the reconstruction. 
 
 ![NMF Decomposition Example](./BB_NMF.png)
 
