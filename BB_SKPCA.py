@@ -49,8 +49,8 @@ V_scaled = scaler.fit_transform(V.T)
 kpca = KernelPCA(n_components=3, kernel='rbf', gamma=0.1, fit_inverse_transform=True)
 V_transformed = kpca.fit_transform(V_scaled)
 
-# Apply Lasso for sparsity
-lasso = Lasso(alpha=0.1)
+# Apply Lasso for sparsity with increased iterations and adjusted tolerance
+lasso = Lasso(alpha=0.1, max_iter=10000, tol=1e-4)
 lasso.fit(V_transformed, np.zeros(V_transformed.shape[0]))
 V_sparse = lasso.coef_.reshape(1, -1) * V_transformed
 
