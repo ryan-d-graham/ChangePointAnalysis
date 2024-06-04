@@ -1,7 +1,6 @@
 import numpy as np
 from sklearn.neighbors import kneighbors_graph
 from sklearn.preprocessing import MinMaxScaler
-from scipy.sparse import csgraph
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.decomposition import NMF
@@ -57,10 +56,26 @@ for _ in range(max_iter):
 # Visualization using Seaborn
 sns.set(style="whitegrid")
 
-# Heatmap of the GNMF components
+# Heatmap of the GNMF components H
 plt.figure(figsize=(10, 8))
 sns.heatmap(H, cmap='viridis', annot=True, linewidths=.5)
-plt.title('Heatmap of GNMF Components')
+plt.title('Heatmap of GNMF Components H')
 plt.xlabel('Components')
 plt.ylabel('Features')
+plt.show()
+
+# Heatmap of the basis matrix W
+plt.figure(figsize=(10, 8))
+sns.heatmap(W, cmap='viridis', annot=True, linewidths=.5)
+plt.title('Heatmap of GNMF Basis Matrix W')
+plt.xlabel('Components')
+plt.ylabel('Samples')
+plt.show()
+
+# Heatmap of the graph Laplacian L
+plt.figure(figsize=(10, 8))
+sns.heatmap(L, cmap='viridis', annot=True, linewidths=.5)
+plt.title('Heatmap of Graph Laplacian L')
+plt.xlabel('Nodes')
+plt.ylabel('Nodes')
 plt.show()
