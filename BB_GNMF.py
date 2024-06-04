@@ -42,9 +42,16 @@ H = nmf.components_
 # Iteratively update W and H
 max_iter = 200
 for _ in range(max_iter):
-    H = np.linalg.solve(np.dot(W.T, W) + alpha * L, np.dot(W.T, V_scaled))
+    # Update H
+    A = np.dot(W.T, W) + alpha * np.identity(W.shape[1])
+    B = np.dot(W.T, V_scaled)
+    H = np.linalg.solve(A, B)
     H[H < 0] = 0
-    W = np.linalg.solve(np.dot(H, H.T), np.dot(V_scaled, H.T)).T
+
+    # Update W
+    A = np.dot(H, H.T)
+    B = np.dot(V_scaled, H.T)
+    W = np.linalg.solve(A.T, B.T).T
     W[W < 0] = 0
 
 # Visualization using Seaborn
