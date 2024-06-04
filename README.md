@@ -39,6 +39,14 @@ The script can be adapted for neural spike train analysis, where:
 - **Coefficient Matrix (H)**: Displays how these neural clusters' activity varies over time. Rows of H can identify periods where certin patterns are more prominent, clustering time blocks based on neural activity trends. 
 - **Reconstructed Matrix (V*)**: Validates the clustering by approximating the original data, helping to ensure the identified clusters and temporal patterns accurately represent the neural activity. 
 
+## NMF Decomposition Example
+
+The image below illustrates the process of Non-Negative Matrix Factorization (NMF) applied to the example data. It shows the decomposition of the original data matrix into two component matrices and the reconstruction. 
+
+![NMF Decomposition Example](./BB_NMF.png)
+
+- **Image Description**: The image demonstrates the decomposition of the original matrix \( V \) into the basis matrix \( W \) and the coefficient matrix \( H \), along with the reconstructed matrix \( V^* \).
+
 ### Steps for Analysis
 
 1. **Spike Detection and Sorting**: Ensure accurate detection and sorting of spikes.
