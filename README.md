@@ -45,7 +45,7 @@ The image below illustrates the process of Non-Negative Matrix Factorization (NM
 
 ![NMF Decomposition Example](./BB_NMF.png)
 
-- **Image Description**: The image demonstrates the decomposition of the original matrix \( V \) into the basis matrix \( W \) and the coefficient matrix \( H \), along with the reconstructed matrix \( V^* \).
+- **Image Description**: The image demonstrates the decomposition of the original matrix \( V \) into the basis matrix \( W \) and the coefficient matrix \( H \), along with the reconstructed matrix \( V* \).
 
 ### Steps for Analysis
 
