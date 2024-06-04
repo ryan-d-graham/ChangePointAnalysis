@@ -5,25 +5,26 @@ from sklearn.decomposition import KernelPCA
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import Lasso
 import pandas as pd
+from astropy.stats import bayesian_blocks
 
-# Example data: timestamps and measurements
-timestamps = np.array([
-    [0.1, 0.15, 0.12],
-    [0.21, 0.27, 0.25],
-    [0.33, 0.31, 0.38],
-    [0.41, 0.45, 0.47],
-    [0.53, 0.52, 0.56]
-])
-measurements = np.array([
-    [10, 15, 12],
-    [12, 17, 14],
-    [11, 16, 13],
-    [13, 18, 15],
-    [14, 19, 16]
-])
+# Example data: unique timestamps and measurements
+np.random.seed(42)
+timestamps = np.sort(np.random.uniform(0, 1, (100, 10)), axis=0)
 
-# Simulate the Bayesian Blocks result by manually setting edges (simplified example)
-edges = np.array([0, 0.2, 0.4, 0.6])
+# Generate a matrix of lambdas from a gamma distribution
+shape, scale = 2., 2.  # shape and scale parameters for gamma distribution
+lambdas = np.random.gamma(shape, scale, (100, 10))
+
+# Generate measurements using the lambda matrix for Poisson random draws
+measurements = np.random.poisson(lam=lambdas)
+
+# Flatten the data for Bayesian Blocks input
+time_tags = timestamps.flatten()
+measurements_flat = measurements.flatten()
+
+# Apply Bayesian Blocks to find change points
+edges = bayesian_blocks(t=time_tags, x=measurements_flat, fitness='events', p0=0.05)
+print("Detected change points:", edges)
 
 # Create a matrix to store the weighted rates for each block
 num_variables = measurements.shape[1]
