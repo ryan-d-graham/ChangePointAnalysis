@@ -58,8 +58,8 @@ lasso_cv.fit(V_transformed, np.zeros(V_transformed.shape[0]))
 best_alpha = lasso_cv.alpha_
 print("Best alpha found by LassoCV:", best_alpha)
 
-# Fit Lasso with the best alpha
-lasso = Lasso(alpha=best_alpha, max_iter=10000, tol=1e-4, selection='cyclic')
+# Fit Lasso with the best alpha and a different solver
+lasso = Lasso(alpha=best_alpha, max_iter=20000, tol=1e-3, selection='random')
 lasso.fit(V_transformed, np.zeros(V_transformed.shape[0]))
 V_sparse = lasso.coef_.reshape(1, -1) * V_transformed
 
