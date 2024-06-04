@@ -3,7 +3,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.decomposition import KernelPCA
 from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LassoCV
+from sklearn.linear_model import LassoCV, Lasso
 import pandas as pd
 from astropy.stats import bayesian_blocks
 
@@ -51,7 +51,7 @@ kpca = KernelPCA(n_components=3, kernel='rbf', gamma=0.1, fit_inverse_transform=
 V_transformed = kpca.fit_transform(V_scaled)
 
 # Use LassoCV to find the optimal alpha through cross-validation
-lasso_cv = LassoCV(alphas=np.logspace(-6, 6, 13), cv=5, max_iter=10000, tol=1e-4, solver='saga')
+lasso_cv = LassoCV(alphas=np.logspace(-6, 6, 13), cv=5, max_iter=10000, tol=1e-4)
 lasso_cv.fit(V_transformed, np.zeros(V_transformed.shape[0]))
 
 # Extract the best alpha
@@ -59,7 +59,7 @@ best_alpha = lasso_cv.alpha_
 print("Best alpha found by LassoCV:", best_alpha)
 
 # Fit Lasso with the best alpha
-lasso = Lasso(alpha=best_alpha, max_iter=10000, tol=1e-4, solver='saga')
+lasso = Lasso(alpha=best_alpha, max_iter=10000, tol=1e-4, selection='cyclic')
 lasso.fit(V_transformed, np.zeros(V_transformed.shape[0]))
 V_sparse = lasso.coef_.reshape(1, -1) * V_transformed
 
