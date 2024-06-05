@@ -60,4 +60,22 @@ sns.set(style="whitegrid")
 plt.figure(figsize=(10, 8))
 sns.heatmap(H, cmap='viridis', annot=True, linewidths=.5)
 plt.title('Heatmap of GNMF Components H')
-plt​⬤
+plt.xlabel('Blocks')
+plt.ylabel('Components')
+plt.show()
+
+# Heatmap of the basis matrix W
+plt.figure(figsize=(10, 8))
+sns.heatmap(W, cmap='viridis', annot=True, linewidths=.5)
+plt.title('Heatmap of GNMF Basis Matrix W')
+plt.xlabel('Components')
+plt.ylabel('Variables')
+plt.show()
+
+# Heatmap of the graph Laplacian L
+plt.figure(figsize=(10, 8))
+sns.heatmap(L, cmap='viridis', annot=True, linewidths=.5)
+plt.title('Heatmap of Graph Laplacian L')
+plt.xlabel('Nodes (Blocks)')
+plt.ylabel('Nodes (Blocks)')
+plt.show()
