@@ -18,10 +18,10 @@ measurements = np.random.poisson(lam=lambdas)
 
 # Normalize the matrix to ensure all values are non-negative
 scaler = MinMaxScaler()
-V_scaled = scaler.fit_transform(measurements.T)  # Transpose to get (blocks x variables)
+V_scaled = scaler.fit_transform(measurements)  # (variables x blocks)
 
 # Construct the similarity matrix using k-nearest neighbors
-knn_graph = kneighbors_graph(V_scaled, n_neighbors=5, mode='connectivity', include_self=True)
+knn_graph = kneighbors_graph(V_scaled.T, n_neighbors=5, mode='connectivity', include_self=True)
 S = knn_graph.toarray()
 
 # Compute the degree matrix
@@ -35,8 +35,8 @@ alpha = 0.1
 
 # Initialize W and H using NMF
 nmf = NMF(n_components=3, init='random', random_state=42)
-W = nmf.fit_transform(V_scaled)  # (blocks x components)
-H = nmf.components_  # (components x variables)
+W = nmf.fit_transform(V_scaled)  # (variables x components)
+H = nmf.components_  # (components x blocks)
 
 # Iteratively update W and H
 max_iter = 200
@@ -60,7 +60,7 @@ sns.set(style="whitegrid")
 plt.figure(figsize=(10, 8))
 sns.heatmap(H, cmap='viridis', annot=True, linewidths=.5)
 plt.title('Heatmap of GNMF Components H')
-plt.xlabel('Variables')
+plt.xlabel('Blocks')
 plt.ylabel('Components')
 plt.show()
 
@@ -69,7 +69,7 @@ plt.figure(figsize=(10, 8))
 sns.heatmap(W, cmap='viridis', annot=True, linewidths=.5)
 plt.title('Heatmap of GNMF Basis Matrix W')
 plt.xlabel('Components')
-plt.ylabel('Blocks')
+plt.ylabel('Variables')
 plt.show()
 
 # Heatmap of the graph Laplacian L
