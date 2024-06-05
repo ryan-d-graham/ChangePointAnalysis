@@ -38,26 +38,25 @@ alpha = 0.1
 
 # Initialize W and H using NMF
 nmf = NMF(n_components=3, init='random', random_state=42)
-W_T = nmf.fit_transform(V_scaled_T)  # (blocks x components)
-H = nmf.components_  # (components x variables)
+H = nmf.fit_transform(V_scaled_T)  # (blocks x components)
+W = nmf.components_  # (components x variables)
 
-# Transpose W_T to get W in the correct shape (variables x components)
-W = W_T.T  # (components x blocks)
+# Transpose W to get the correct shape (variables x components)
+W = W.T  # (variables x components)
 
 # Iteratively update W and H
 max_iter = 200
 for _ in range(max_iter):
     # Update H
-    A = np.dot(W.T, W) + alpha * np.identity(W.shape[0])
+    A = np.dot(W.T, W) + alpha * np.identity(W.shape[1])
     B = np.dot(W.T, V_scaled)
-    H = np.linalg.solve(A, B)
+    H = np.linalg.solve(A, B.T).T
     H[H < 0] = 0
 
     # Update W
     A = np.dot(H, H.T)
-    B = np.dot(V_scaled, H.T)
-    W_T = np.linalg.solve(A.T, B.T).T
-    W = W_T.T
+    B = np.dot(V_scaled_T.T, H.T)
+    W = np.linalg.solve(A.T, B.T).T
     W[W < 0] = 0
 
 # Visualization using Seaborn
@@ -67,7 +66,7 @@ sns.set(style="whitegrid")
 plt.figure(figsize=(10, 8))
 sns.heatmap(H, cmap='viridis', annot=True, linewidths=.5)
 plt.title('Heatmap of GNMF Components H')
-plt.xlabel('Variables')
+plt.xlabel('Blocks')
 plt.ylabel('Components')
 plt.show()
 
@@ -76,7 +75,7 @@ plt.figure(figsize=(10, 8))
 sns.heatmap(W, cmap='viridis', annot=True, linewidths=.5)
 plt.title('Heatmap of GNMF Basis Matrix W')
 plt.xlabel('Components')
-plt.ylabel('Blocks')
+plt.ylabel('Variables')
 plt.show()
 
 # Heatmap of the graph Laplacian L
