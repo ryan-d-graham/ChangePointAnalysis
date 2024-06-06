@@ -1,31 +1,28 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from tensorly.decomposition import non_negative_tucker
-import tensorly as tl
 from astropy.stats import bayesian_blocks
+import tensorly as tl
 import argparse
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Bayesian Blocks and SNNTD Analysis')
     parser.add_argument('--nntd_rank', type=str, default='10,5,5', help='Comma-separated ranks for the SNNTD')
     parser.add_argument('--p0', type=float, default=0.05, help='False positive rate for Bayesian Blocks')
+    parser.add_argument('--epsilon', type=float, default=1e-10, help='Epsilon value to avoid zero timestamps')
+    parser.add_argument('--mea_rows', type=int, default=8, help='Number of rows in MEA grid')
+    parser.add_argument('--mea_cols', type=int, default=8, help='Number of columns in MEA grid')
+    parser.add_argument('--sparsity', type=float, default=0.1, help='Sparsity threshold for enforcing sparsity in decomposition')
     return parser.parse_args()
 
-epsilon = 1e-9
-n_obs = 10
-T = 10
-mea_rows, mea_cols = 8, 8
-mea_channels = mea_rows * mea_cols
-
-def load_example_data():
+def load_example_data(epsilon, mea_channels):
     # Generate synthetic MEA data with inhomogeneous timestamps
     np.random.seed(42)
-    
-    timestamps = [np.sort(np.random.uniform(epsilon, T, n_obs)) for _ in range(mea_channels)]
+    timestamps = [np.sort(np.random.uniform(epsilon, 10, 100)) for _ in range(mea_channels)]
 
     # Generate lambda values from a gamma distribution
     shape, scale = 2.0, 1.0
-    lambdas = np.random.gamma(shape, scale, (n_obs, mea_channels))
+    lambdas = np.random.gamma(shape, scale, (100, mea_channels))
 
     # Generate Poisson-distributed data using the lambda matrix and ensure positive integers
     measurements = np.random.poisson(lam=lambdas) + 1  # Shift by 1 to ensure all values are positive integers
@@ -37,7 +34,8 @@ def main():
     ranks = tuple(map(int, args.nntd_rank.split(',')))
 
     # Load example data
-    timestamps, measurements = load_example_data()
+    mea_channels = args.mea_rows * args.mea_cols
+    timestamps, measurements = load_example_data(args.epsilon, mea_channels)
 
     # Flatten the data for Bayesian Blocks input
     time_tags = np.concatenate(timestamps)
@@ -49,7 +47,7 @@ def main():
 
     # Create a 3D tensor to store the weighted rates for each block
     num_blocks = len(edges) - 1
-    mea_rows, mea_cols = 8, 8
+    mea_rows, mea_cols = args.mea_rows, args.mea_cols
     V = np.zeros((num_blocks, mea_rows, mea_cols))
 
     # Calculate the weighted rate for each channel in each block
@@ -67,62 +65,48 @@ def main():
     # Convert to a tensorly tensor
     V_tensor = tl.tensor(V, dtype=tl.float32)
 
-    # Perform Non-Negative Tucker Decomposition
-    core, factors = non_negative_tucker(V_tensor, rank=ranks, n_iter_max=100, tol=1e-5)
+    # Perform Non-Negative Tucker Decomposition with proper initialization
+    core, factors = non_negative_tucker(V_tensor, rank=ranks, n_iter_max=100, tol=1e-5, init='random')
 
     # Function to enforce sparsity
     def enforce_sparsity(tensor, threshold):
         return tl.where(tensor < threshold, 0, tensor)
 
     # Apply sparsity constraint
-    sparsity_threshold = 0.1
+    sparsity_threshold = args.sparsity
     core = enforce_sparsity(core, sparsity_threshold)
     factors = [enforce_sparsity(factor, sparsity_threshold) for factor in factors]
 
     # Reconstruct the tensor from the decomposition
     V_reconstructed = tl.tucker_to_tensor((core, factors))
 
-    # Plot factor matrices
-    def plot_factor_matrix(matrix, title, xlabel, ylabel):
-        plt.figure(figsize=(10, 8))
-        plt.imshow(matrix, cmap='viridis', aspect='auto')
-        plt.colorbar()
-        plt.title(title)
-        plt.xlabel(xlabel)
-        plt.ylabel(ylabel)
+    # Plotting all matrices and tensors on a common scale with a single color bar
+    def plot_with_common_colorbar(tensors, titles):
+        num_plots = len(tensors)
+        fig, axes = plt.subplots(1, num_plots, figsize=(15, 5))
+        
+        # Find global min and max for common color scale
+        vmin = min(tensor.min() for tensor in tensors)
+        vmax = max(tensor.max() for tensor in tensors)
+        
+        for ax, tensor, title in zip(axes, tensors, titles):
+            im = ax.imshow(tensor, cmap='viridis', aspect='auto', vmin=vmin, vmax=vmax)
+            ax.set_title(title)
+        
+        fig.colorbar(im, ax=axes.ravel().tolist())
+        plt.tight_layout()
         plt.show()
 
-    plot_factor_matrix(factors[0], "Temporal Factor Matrix (A)", "Latent Factors", "Time Segments")
-    plot_factor_matrix(factors[1], "Row Factor Matrix (B)", "Latent Factors", "MEA Rows")
-    plot_factor_matrix(factors[2], "Column Factor Matrix (C)", "Latent Factors", "MEA Columns")
+    # Plot factor matrices
+    plot_with_common_colorbar([factors[0], factors[1], factors[2]],
+                              ["Temporal Factor Matrix (A)", "Row Factor Matrix (B)", "Column Factor Matrix (C)"])
 
     # Plot core tensor slices
-    def plot_core_tensor_slices(core, title):
-        fig, axes = plt.subplots(1, core.shape[0], figsize=(15, 5))
-        for i in range(core.shape[0]):
-            ax = axes[i]
-            im = ax.imshow(core[i, :, :], cmap='viridis')
-            fig.colorbar(im, ax=ax)
-            ax.set_title(f'Slice {i+1}')
-        plt.suptitle(title)
-        plt.show()
+    plot_with_common_colorbar([core[i] for i in range(core.shape[0])],
+                              [f"Core Tensor Slice {i+1}" for i in range(core.shape[0])])
 
-    plot_core_tensor_slices(core, "Core Tensor Slices")
-
-    # Plot original tensor slices
-    def plot_tensor_slices(tensor, title):
-        num_slices = tensor.shape[0]
-        fig, axes = plt.subplots(1, num_slices, figsize=(15, 5))
-        for i in range(num_slices):
-            ax = axes[i]
-            im = ax.imshow(tensor[i, :, :], cmap='viridis')
-            fig.colorbar(im, ax=ax)
-            ax.set_title(f'Slice {i+1}')
-        plt.suptitle(title)
-        plt.show()
-
-    plot_tensor_slices(V, "Original Tensor Slices")
-    plot_tensor_slices(V_reconstructed, "Reconstructed Tensor Slices")
+    # Plot original and reconstructed tensor slices
+    plot_with_common_colorbar([V, V_reconstructed], ["Original Tensor Slices", "Reconstructed Tensor Slices"])
 
 if __name__ == "__main__":
     main()
