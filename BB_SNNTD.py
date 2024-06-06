@@ -10,15 +10,17 @@ def parse_arguments():
     parser.add_argument('--p0', type=float, default=0.05, help='False positive rate for Bayesian Blocks')
     return parser.parse_args()
 
+epsilon = 1e-9
+n_obs = 10
+T = 10
+mea_rows, mea_cols = 8, 8
+mea_channels = mea_rows * mea_cols
+
 def load_example_data():
     # Generate synthetic MEA data with inhomogeneous timestamps
     np.random.seed(42)
-    epsilon = 1e-9
-    n_obs = 10
-    T = 10
-    mea_rows, mea_cols = 8, 8
-    mea_channels = mea_rows * mea_cols
-    timestamps = [np.sort(np.random.uniform(epsilon, T, n_obs)) for _ in range(mea_rows*mea_cols)]
+    
+    timestamps = [np.sort(np.random.uniform(epsilon, T, n_obs)) for _ in range(mea_channels)]
 
     # Generate lambda values from a gamma distribution
     shape, scale = 2.0, 1.0
