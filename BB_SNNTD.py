@@ -4,15 +4,24 @@ from astropy.stats import bayesian_blocks
 import tensorly as tl
 from tensorly.decomposition import non_negative_tucker
 
-# Generate synthetic MEA data
-np.random.seed(42)
-timestamps = np.linspace(0, 10, 100)
+# Parameters
 mea_rows, mea_cols = 8, 8
 mea_channels = mea_rows * mea_cols
-measurements = np.random.poisson(lam=5.0, size=(100, mea_channels))
+num_samples = 100
+
+# Generate inhomogeneous timestamps for each channel
+np.random.seed(42)
+timestamps = [np.sort(np.random.uniform(0, 10, num_samples)) for _ in range(mea_channels)]
+
+# Generate lambda values from a gamma distribution
+shape, scale = 2.0, 1.0  # Shape and scale parameters for gamma distribution
+lambdas = np.random.gamma(shape, scale, (num_samples, mea_channels))
+
+# Generate Poisson-distributed data using the lambda matrix
+measurements = np.random.poisson(lam=lambdas)
 
 # Flatten the data for Bayesian Blocks input
-time_tags = np.tile(timestamps, mea_channels)
+time_tags = np.concatenate(timestamps)
 measurements_flat = measurements.flatten()
 
 # Apply Bayesian Blocks to find change points
@@ -28,7 +37,7 @@ for i in range(mea_channels):
     row, col = divmod(i, mea_cols)
     for j in range(num_blocks):
         start, end = edges[j], edges[j + 1]
-        mask = (timestamps >= start) & (timestamps < end)
+        mask = (timestamps[i] >= start) & (timestamps[i] < end)
         duration = end - start
         if np.sum(mask) > 0 and duration > 0:
             V[j, row, col] = np.sum(measurements[mask, i]) / duration
