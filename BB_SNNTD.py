@@ -89,7 +89,7 @@ def main():
     # Plot temporal, row, and column factors independently with annotated axes and ticks starting from 1
     def plot_factor(factor, title, xlabel, ylabel, xticks, yticks):
         plt.figure(figsize=(10, 8))
-        sns.heatmap(factor, cmap='viridis', linewidths=.5, linecolor='white', 
+        sns.heatmap(factor, cmap='viridis', linewidths=.5, linecolor='white',
                     xticklabels=xticks, yticklabels=yticks)
         plt.title(title)
         plt.xlabel(xlabel)
@@ -102,9 +102,9 @@ def main():
     row_ticks = np.arange(1, factors[1].shape[0] + 1)
     column_ticks = np.arange(1, factors[2].shape[0] + 1)
 
-    plot_factor(factors[0], "Temporal Factor Matrix (A)", "Temporal Components", "Temporal Blocks", temporal_ticks, temporal_ticks)
-    plot_factor(factors[1], "Row Factor Matrix (B)", "Latent Row Components", "Row Channel", temporal_ticks, row_ticks)
-    plot_factor(factors[2], "Column Factor Matrix (C)", "Latent Column Components", "Column Channel", temporal_ticks, column_ticks)
+    plot_factor(factors[0], "Temporal Factor Matrix (A)", "Temporal Components", "Temporal Blocks", temporal_ticks, np.arange(1, factors[0].shape[0] + 1))
+    plot_factor(factors[1], "Row Factor Matrix (B)", "Latent Row Components", "Row Channel", np.arange(1, factors[1].shape[1] + 1), row_ticks)
+    plot_factor(factors[2], "Column Factor Matrix (C)", "Latent Column Components", "Column Channel", np.arange(1, factors[2].shape[1] + 1), column_ticks)
 
     # Plot core tensor slices in a rectangular grid on a common scale with a color bar placed outside the grid
     def plot_core_slices(core, title):
@@ -128,7 +128,6 @@ def main():
         
         cbar = fig.colorbar(im, ax=axes.ravel().tolist(), orientation='vertical', pad=0.02)
         plt.suptitle(title)
-        plt.tight_layout()
         plt.show()
 
     plot_core_slices(core, "Core Tensor Slices")
