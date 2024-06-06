@@ -4,21 +4,21 @@ from astropy.stats import bayesian_blocks
 import tensorly as tl
 from tensorly.decomposition import non_negative_tucker
 
-# Parameters
+# Constants
+EPSILON = 1e-10
+
+# Generate synthetic MEA data
+np.random.seed(42)
+timestamps = [np.sort(np.random.uniform(0, 10, 100) + EPSILON) for _ in range(64)]
 mea_rows, mea_cols = 8, 8
 mea_channels = mea_rows * mea_cols
-num_samples = 100
-
-# Generate inhomogeneous timestamps for each channel
-np.random.seed(42)
-timestamps = [np.sort(np.random.uniform(0, 10, num_samples)) for _ in range(mea_channels)]
 
 # Generate lambda values from a gamma distribution
 shape, scale = 2.0, 1.0  # Shape and scale parameters for gamma distribution
-lambdas = np.random.gamma(shape, scale, (num_samples, mea_channels))
+lambdas = np.random.gamma(shape, scale, (100, mea_channels))
 
-# Generate Poisson-distributed data using the lambda matrix
-measurements = np.random.poisson(lam=lambdas)
+# Generate Poisson-distributed data using the lambda matrix and ensure positive integers
+measurements = np.random.poisson(lam=lambdas) + 1  # Shift by 1 to ensure all values are positive integers
 
 # Flatten the data for Bayesian Blocks input
 time_tags = np.concatenate(timestamps)
@@ -38,7 +38,7 @@ for i in range(mea_channels):
     for j in range(num_blocks):
         start, end = edges[j], edges[j + 1]
         mask = (timestamps[i] >= start) & (timestamps[i] < end)
-        duration = end - start
+        duration = end - start  # Ensure duration is non-zero by Bayesian Blocks unique edges
         if np.sum(mask) > 0 and duration > 0:
             V[j, row, col] = np.sum(measurements[mask, i]) / duration
         else:
@@ -48,8 +48,8 @@ for i in range(mea_channels):
 V_tensor = tl.tensor(V, dtype=tl.float32)
 
 # Perform Non-Negative Tucker Decomposition
-ranks = [10, 5, 5]  # Example rank selection
-core, factors = non_negative_tucker(V_tensor, ranks=ranks, n_iter_max=100, tol=1e-5)
+rank = [10, 5, 5]  # Example rank selection
+core, factors = non_negative_tucker(V_tensor, rank=rank, n_iter_max=100, tol=1e-5)
 
 # Function to enforce sparsity
 def enforce_sparsity(tensor, threshold):
