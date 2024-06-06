@@ -86,18 +86,22 @@ def main():
     print("Non-zero elements in original tensor:", np.count_nonzero(V))
     print("Non-zero elements in reconstructed tensor:", np.count_nonzero(V_reconstructed))
 
-    # Plot temporal, row, and column factors independently with annotated axes
-    def plot_factor(factor, title, xlabel, ylabel):
+    # Plot temporal, row, and column factors independently with annotated axes and ticks starting from 1
+    def plot_factor(factor, title, xlabel, ylabel, xticks, yticks):
         plt.figure(figsize=(10, 8))
-        sns.heatmap(factor, cmap='viridis', linewidths=.5, linecolor='white')
+        sns.heatmap(factor, cmap='viridis', linewidths=.5, linecolor='white', xticklabels=xticks, yticklabels=yticks)
         plt.title(title)
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
         plt.show()
 
-    plot_factor(factors[0], "Temporal Factor Matrix (A)", "Temporal Components", "Temporal Blocks")
-    plot_factor(factors[1], "Row Factor Matrix (B)", "Latent Row Components", "Row Channel")
-    plot_factor(factors[2], "Column Factor Matrix (C)", "Latent Column Components", "Column Channel")
+    temporal_ticks = np.arange(1, factors[0].shape[1] + 1)
+    row_ticks = np.arange(1, factors[1].shape[0] + 1)
+    column_ticks = np.arange(1, factors[2].shape[0] + 1)
+
+    plot_factor(factors[0], "Temporal Factor Matrix (A)", "Temporal Components", "Temporal Blocks", temporal_ticks, temporal_ticks)
+    plot_factor(factors[1], "Row Factor Matrix (B)", "Latent Row Components", "Row Channel", temporal_ticks, row_ticks)
+    plot_factor(factors[2], "Column Factor Matrix (C)", "Latent Column Components", "Column Channel", temporal_ticks, column_ticks)
 
     # Plot core tensor slices in a rectangular grid on a common scale with a color bar placed outside the grid
     def plot_core_slices(core, title):
@@ -114,6 +118,8 @@ def main():
             if i < num_slices:
                 im = ax.imshow(core[i, :, :], cmap='viridis', aspect='auto', vmin=vmin, vmax=vmax)
                 ax.set_title(f'Slice {i+1}')
+                ax.set_xticks(np.arange(0, core.shape[2]) + 1)
+                ax.set_yticks(np.arange(0, core.shape[1]) + 1)
             else:
                 ax.axis('off')
         
