@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from tensorly.decomposition import non_negative_tucker
+import tensorly as tl
 from astropy.stats import bayesian_blocks
 import argparse
 
