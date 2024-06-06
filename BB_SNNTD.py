@@ -13,13 +13,16 @@ def parse_arguments():
 def load_example_data():
     # Generate synthetic MEA data with inhomogeneous timestamps
     np.random.seed(42)
-    timestamps = [np.sort(np.random.uniform(0.1, 10, 100) + 1e-10) for _ in range(64)]
+    epsilon = 1e-9
+    n_obs = 10
+    T = 10
     mea_rows, mea_cols = 8, 8
     mea_channels = mea_rows * mea_cols
+    timestamps = [np.sort(np.random.uniform(epsilon, T, n_obs)) for _ in range(mea_rows*mea_cols)]
 
     # Generate lambda values from a gamma distribution
     shape, scale = 2.0, 1.0
-    lambdas = np.random.gamma(shape, scale, (100, mea_channels))
+    lambdas = np.random.gamma(shape, scale, (n_obs, mea_channels))
 
     # Generate Poisson-distributed data using the lambda matrix and ensure positive integers
     measurements = np.random.poisson(lam=lambdas) + 1  # Shift by 1 to ensure all values are positive integers
