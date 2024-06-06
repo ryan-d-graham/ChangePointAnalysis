@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
 from tensorly.decomposition import non_negative_tucker
 from astropy.stats import bayesian_blocks
 import tensorly as tl
@@ -93,19 +94,42 @@ def main():
             im = ax.imshow(tensor, cmap='viridis', aspect='auto', vmin=vmin, vmax=vmax)
             ax.set_title(title)
         
-        fig.colorbar(im, ax=axes.ravel().tolist())
+        cbar = fig.colorbar(im, ax=axes.ravel().tolist(), orientation='horizontal', pad=0.1)
         plt.tight_layout()
         plt.show()
 
-    # Plot factor matrices
-    plot_with_common_colorbar([factors[0], factors[1], factors[2]],
-                              ["Temporal Factor Matrix (A)", "Row Factor Matrix (B)", "Column Factor Matrix (C)"])
+    # Plot temporal, row, and column factors independently
+    def plot_factor(factor, title):
+        plt.figure(figsize=(10, 8))
+        sns.heatmap(factor, cmap='viridis', linewidths=.5, linecolor='white')
+        plt.title(title)
+        plt.show()
 
-    # Plot core tensor slices
-    plot_with_common_colorbar([core[i] for i in range(core.shape[0])],
-                              [f"Core Tensor Slice {i+1}" for i in range(core.shape[0])])
+    plot_factor(factors[0], "Temporal Factor Matrix (A)")
+    plot_factor(factors[1], "Row Factor Matrix (B)")
+    plot_factor(factors[2], "Column Factor Matrix (C)")
 
-    # Plot original and reconstructed tensor slices
+    # Plot core tensor slices in a rectangular list on a common scale with a color bar that doesn’t lie on any of the slices
+    def plot_core_slices(core, title):
+        num_slices = core.shape[0]
+        fig, axes = plt.subplots(1, num_slices, figsize=(num_slices * 5, 5))
+        
+        # Find global min and max for common color scale
+        vmin = core.min()
+        vmax = core.max()
+        
+        for ax, i in zip(axes, range(num_slices)):
+            im = ax.imshow(core[i, :, :], cmap='viridis', aspect='auto', vmin=vmin, vmax=vmax)
+            ax.set_title(f'Slice {i+1}')
+        
+        cbar = fig.colorbar(im, ax=axes.ravel().tolist(), orientation='vertical', pad=0.02)
+        plt.suptitle(title)
+        plt.tight_layout()
+        plt.show()
+
+    plot_core_slices(core, "Core Tensor Slices")
+
+    # Plot original and reconstructed tensor slices on a common scale with a single color bar
     plot_with_common_colorbar([V, V_reconstructed], ["Original Tensor Slices", "Reconstructed Tensor Slices"])
 
 if __name__ == "__main__":
