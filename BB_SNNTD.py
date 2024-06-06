@@ -5,17 +5,19 @@ import tensorly as tl
 from tensorly.decomposition import non_negative_tucker
 
 # Constants
-EPSILON = 1e-10
+EPSILON = 1e-9
 
 # Generate synthetic MEA data
+n_obs = 10
+T = 10
 np.random.seed(42)
-timestamps = [np.sort(np.random.uniform(0, 10, 100) + EPSILON) for _ in range(64)]
 mea_rows, mea_cols = 8, 8
 mea_channels = mea_rows * mea_cols
+timestamps = [np.sort(np.random.uniform(EPSILON, T, n_obs)) for _ in range(mea_rows*mea_cols)]
 
 # Generate lambda values from a gamma distribution
 shape, scale = 2.0, 1.0  # Shape and scale parameters for gamma distribution
-lambdas = np.random.gamma(shape, scale, (100, mea_channels))
+lambdas = np.random.gamma(shape, scale, (n_obs, mea_channels))
 
 # Generate Poisson-distributed data using the lambda matrix and ensure positive integers
 measurements = np.random.poisson(lam=lambdas) + 1  # Shift by 1 to ensure all values are positive integers
@@ -56,7 +58,7 @@ def enforce_sparsity(tensor, threshold):
     return tl.where(tensor < threshold, 0, tensor)
 
 # Apply sparsity constraint
-sparsity_threshold = 0.1
+sparsity_threshold = 0.01
 core = enforce_sparsity(core, sparsity_threshold)
 factors = [enforce_sparsity(factor, sparsity_threshold) for factor in factors]
 
