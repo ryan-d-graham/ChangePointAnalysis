@@ -89,10 +89,13 @@ def main():
     # Plot temporal, row, and column factors independently with annotated axes and ticks starting from 1
     def plot_factor(factor, title, xlabel, ylabel, xticks, yticks):
         plt.figure(figsize=(10, 8))
-        sns.heatmap(factor, cmap='viridis', linewidths=.5, linecolor='white', xticklabels=xticks, yticklabels=yticks)
+        sns.heatmap(factor, cmap='viridis', linewidths=.5, linecolor='white', 
+                    xticklabels=xticks, yticklabels=yticks)
         plt.title(title)
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
+        plt.xticks(np.arange(len(xticks)), xticks)
+        plt.yticks(np.arange(len(yticks)), yticks)
         plt.show()
 
     temporal_ticks = np.arange(1, factors[0].shape[1] + 1)
@@ -118,8 +121,8 @@ def main():
             if i < num_slices:
                 im = ax.imshow(core[i, :, :], cmap='viridis', aspect='auto', vmin=vmin, vmax=vmax)
                 ax.set_title(f'Slice {i+1}')
-                ax.set_xticks(np.arange(0, core.shape[2]) + 1)
-                ax.set_yticks(np.arange(0, core.shape[1]) + 1)
+                ax.set_xticks(np.arange(core.shape[2]) + 1)
+                ax.set_yticks(np.arange(core.shape[1]) + 1)
             else:
                 ax.axis('off')
         
