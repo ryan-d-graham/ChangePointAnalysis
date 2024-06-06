@@ -19,6 +19,24 @@ This script performs the following tasks:
 - `--sparsity`: Sparsity threshold for enforcing sparsity in decomposition.
 - `--num_observations`: Number of observations in each channel.
 
+### Example Run Output
+
+**Temporal Factor Matrix**
+
+![Temporal Factor Matrix](BB_SNNTD_Temporal.png)
+
+**Row Factor Matrix**
+
+![Row Factor Matrix](BB_SNNTD_Row.png)
+
+**Column Factor Matrix**
+
+![Column Factor Matrix](BB_SNNTD_Col.png)
+
+**Core Tensor Slices**
+
+![Core Tensor Slices](BB_SNNTD_Core.png)
+
 ### Example Usage
 
 ```sh
