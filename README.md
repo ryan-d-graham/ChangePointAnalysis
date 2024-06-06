@@ -1,27 +1,27 @@
-ChangePointAnalysis
+# ChangePointAnalysis
 
-BB_SNNTD.py
+## BB_SNNTD.py
 
 This script performs the following tasks:
+1. **Data Preparation**: Processes multivariate MEA data, combining timestamps and weights from different channels.
+2. **Change Point Detection**: Uses the Bayesian Blocks algorithm to detect common change points across all channels.
+3. **Tensor Construction**: Constructs a tensor of weighted rates for each block and channel.
+4. **Tensor Decomposition**: Decomposes the tensor into core and factor matrices using Sparse Non-Negative Tucker Decomposition (SNNTD).
+5. **Visualization**: Visualizes the core tensor slices and the factor matrices using heatmaps.
 
-	1.	Data Preparation: Processes multivariate MEA data, combining timestamps and weights from different channels.
-	2.	Change Point Detection: Uses the Bayesian Blocks algorithm to detect common change points across all channels.
-	3.	Tensor Construction: Constructs a tensor of weighted rates for each block and channel.
-	4.	Tensor Decomposition: Decomposes the tensor into core and factor matrices using Sparse Non-Negative Tucker Decomposition (SNNTD).
-	5.	Visualization: Visualizes the core tensor slices and the factor matrices using heatmaps.
+### Command-Line Arguments
 
-Command-Line Arguments
+- `--nntd_rank`: Comma-separated ranks for the SNNTD.
+- `--p0`: False alarm probability for Bayesian Blocks.
+- `--epsilon`: Epsilon value to avoid zero timestamps.
+- `--mea_rows`: Number of rows in the MEA grid.
+- `--mea_cols`: Number of columns in the MEA grid.
+- `--sparsity`: Sparsity threshold for enforcing sparsity in decomposition.
+- `--num_observations`: Number of observations in each channel.
 
-	•	--nntd_rank: Comma-separated ranks for the SNNTD.
-	•	--p0: False alarm probability for Bayesian Blocks.
-	•	--epsilon: Epsilon value to avoid zero timestamps.
-	•	--mea_rows: Number of rows in the MEA grid.
-	•	--mea_cols: Number of columns in the MEA grid.
-	•	--sparsity: Sparsity threshold for enforcing sparsity in decomposition.
-	•	--num_observations: Number of observations in each channel.
+### Example Usage
 
-Example Usage
-
+```sh
 python BB_SNNTD.py --nntd_rank 10,5,5 --p0 0.05 --epsilon 1e-10 --mea_rows 8 --mea_cols 8 --sparsity 0.1 --num_observations 10
 
 Applications
