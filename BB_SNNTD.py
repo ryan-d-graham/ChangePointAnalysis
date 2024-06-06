@@ -13,7 +13,7 @@ def parse_arguments():
     parser.add_argument('--epsilon', type=float, default=1e-10, help='Epsilon value to avoid zero timestamps')
     parser.add_argument('--mea_rows', type=int, default=8, help='Number of rows in MEA grid')
     parser.add_argument('--mea_cols', type=int, default=8, help='Number of columns in MEA grid')
-    parser.add_argument('--sparsity', type=float, default=0.01, help='Sparsity threshold for enforcing sparsity in decomposition')
+    parser.add_argument('--sparsity', type=float, default=0.1, help='Sparsity threshold for enforcing sparsity in decomposition')
     parser.add_argument('--num_observations', type=int, default=10, help='Number of observations in each channel')
     return parser.parse_args()
 
@@ -86,46 +86,36 @@ def main():
     print("Non-zero elements in original tensor:", np.count_nonzero(V))
     print("Non-zero elements in reconstructed tensor:", np.count_nonzero(V_reconstructed))
 
-    # Plotting all matrices and tensors on a common scale with a single color bar
-    def plot_with_common_colorbar(tensors, titles):
-        num_plots = len(tensors)
-        fig, axes = plt.subplots(1, num_plots, figsize=(15, 5))
-        
-        # Find global min and max for common color scale
-        vmin = min(tensor.min() for tensor in tensors)
-        vmax = max(tensor.max() for tensor in tensors)
-        
-        for ax, tensor, title in zip(axes, tensors, titles):
-            im = ax.imshow(tensor.mean(axis=0), cmap='viridis', aspect='auto', vmin=vmin, vmax=vmax)
-            ax.set_title(title)
-        
-        cbar = fig.colorbar(im, ax=axes.ravel().tolist(), orientation='horizontal', pad=0.1)
-        plt.tight_layout()
-        plt.show()
-
-    # Plot temporal, row, and column factors independently
-    def plot_factor(factor, title):
+    # Plot temporal, row, and column factors independently with annotated axes
+    def plot_factor(factor, title, xlabel, ylabel):
         plt.figure(figsize=(10, 8))
         sns.heatmap(factor, cmap='viridis', linewidths=.5, linecolor='white')
         plt.title(title)
+        plt.xlabel(xlabel)
+        plt.ylabel(ylabel)
         plt.show()
 
-    plot_factor(factors[0], "Temporal Factor Matrix (A)")
-    plot_factor(factors[1], "Row Factor Matrix (B)")
-    plot_factor(factors[2], "Column Factor Matrix (C)")
+    plot_factor(factors[0], "Temporal Factor Matrix (A)", "Temporal Components", "Temporal Blocks")
+    plot_factor(factors[1], "Row Factor Matrix (B)", "Latent Row Components", "Row Channel")
+    plot_factor(factors[2], "Column Factor Matrix (C)", "Latent Column Components", "Column Channel")
 
-    # Plot core tensor slices in a rectangular list on a common scale with a color bar that doesn’t lie on any of the slices
+    # Plot core tensor slices in a rectangular grid on a common scale with a color bar placed outside the grid
     def plot_core_slices(core, title):
         num_slices = core.shape[0]
-        fig, axes = plt.subplots(1, num_slices, figsize=(num_slices * 5, 5))
+        grid_size = int(np.ceil(np.sqrt(num_slices)))
+        fig, axes = plt.subplots(grid_size, grid_size, figsize=(grid_size * 5, grid_size * 5))
         
         # Find global min and max for common color scale
         vmin = core.min()
         vmax = core.max()
         
-        for ax, i in zip(axes, range(num_slices)):
-            im = ax.imshow(core[i, :, :], cmap='viridis', aspect='auto', vmin=vmin, vmax=vmax)
-            ax.set_title(f'Slice {i+1}')
+        for i in range(grid_size * grid_size):
+            ax = axes.flat[i]
+            if i < num_slices:
+                im = ax.imshow(core[i, :, :], cmap='viridis', aspect='auto', vmin=vmin, vmax=vmax)
+                ax.set_title(f'Slice {i+1}')
+            else:
+                ax.axis('off')
         
         cbar = fig.colorbar(im, ax=axes.ravel().tolist(), orientation='vertical', pad=0.02)
         plt.suptitle(title)
@@ -133,9 +123,6 @@ def main():
         plt.show()
 
     plot_core_slices(core, "Core Tensor Slices")
-
-    # Ensure non-zero elements are plotted correctly
-    plot_with_common_colorbar([V, V_reconstructed], ["Original Tensor Slices", "Reconstructed Tensor Slices"])
 
 if __name__ == "__main__":
     main()
