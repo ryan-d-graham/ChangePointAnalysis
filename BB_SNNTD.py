@@ -14,16 +14,17 @@ def parse_arguments():
     parser.add_argument('--mea_rows', type=int, default=8, help='Number of rows in MEA grid')
     parser.add_argument('--mea_cols', type=int, default=8, help='Number of columns in MEA grid')
     parser.add_argument('--sparsity', type=float, default=0.1, help='Sparsity threshold for enforcing sparsity in decomposition')
+    parser.add_argument('--num_observations', type=int, default=10, help='Number of observations in each channel')
     return parser.parse_args()
 
-def load_example_data(epsilon, mea_channels):
+def load_example_data(epsilon, mea_channels, num_observations):
     # Generate synthetic MEA data with inhomogeneous timestamps
     np.random.seed(42)
-    timestamps = [np.sort(np.random.uniform(epsilon, 10, 100)) for _ in range(mea_channels)]
+    timestamps = [np.sort(np.random.uniform(epsilon, 10, num_observations)) for _ in range(mea_channels)]
 
     # Generate lambda values from a gamma distribution
     shape, scale = 2.0, 1.0
-    lambdas = np.random.gamma(shape, scale, (100, mea_channels))
+    lambdas = np.random.gamma(shape, scale, (num_observations, mea_channels))
 
     # Generate Poisson-distributed data using the lambda matrix and ensure positive integers
     measurements = np.random.poisson(lam=lambdas) + 1  # Shift by 1 to ensure all values are positive integers
@@ -36,7 +37,7 @@ def main():
 
     # Load example data
     mea_channels = args.mea_rows * args.mea_cols
-    timestamps, measurements = load_example_data(args.epsilon, mea_channels)
+    timestamps, measurements = load_example_data(args.epsilon, mea_channels, args.num_observations)
 
     # Flatten the data for Bayesian Blocks input
     time_tags = np.concatenate(timestamps)
