@@ -96,7 +96,7 @@ def main():
         vmax = max(tensor.max() for tensor in tensors)
         
         for ax, tensor, title in zip(axes, tensors, titles):
-            im = ax.imshow(tensor[0], cmap='viridis', aspect='auto', vmin=vmin, vmax=vmax)
+            im = ax.imshow(tensor.mean(axis=0), cmap='viridis', aspect='auto', vmin=vmin, vmax=vmax)
             ax.set_title(title)
         
         cbar = fig.colorbar(im, ax=axes.ravel().tolist(), orientation='horizontal', pad=0.1)
@@ -139,4 +139,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
