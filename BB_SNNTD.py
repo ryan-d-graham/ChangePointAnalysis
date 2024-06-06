@@ -13,7 +13,7 @@ def parse_arguments():
     parser.add_argument('--epsilon', type=float, default=1e-10, help='Epsilon value to avoid zero timestamps')
     parser.add_argument('--mea_rows', type=int, default=8, help='Number of rows in MEA grid')
     parser.add_argument('--mea_cols', type=int, default=8, help='Number of columns in MEA grid')
-    parser.add_argument('--sparsity', type=float, default=0.1, help='Sparsity threshold for enforcing sparsity in decomposition')
+    parser.add_argument('--sparsity', type=float, default=0.01, help='Sparsity threshold for enforcing sparsity in decomposition')
     parser.add_argument('--num_observations', type=int, default=10, help='Number of observations in each channel')
     return parser.parse_args()
 
