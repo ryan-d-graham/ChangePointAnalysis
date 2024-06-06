@@ -82,6 +82,10 @@ def main():
     # Reconstruct the tensor from the decomposition
     V_reconstructed = tl.tucker_to_tensor((core, factors))
 
+    # Check for non-zero matrices
+    print("Non-zero elements in original tensor:", np.count_nonzero(V))
+    print("Non-zero elements in reconstructed tensor:", np.count_nonzero(V_reconstructed))
+
     # Plotting all matrices and tensors on a common scale with a single color bar
     def plot_with_common_colorbar(tensors, titles):
         num_plots = len(tensors)
@@ -130,7 +134,7 @@ def main():
 
     plot_core_slices(core, "Core Tensor Slices")
 
-    # Plot original and reconstructed tensor slices on a common scale with a single color bar
+    # Ensure non-zero elements are plotted correctly
     plot_with_common_colorbar([V, V_reconstructed], ["Original Tensor Slices", "Reconstructed Tensor Slices"])
 
 if __name__ == "__main__":
