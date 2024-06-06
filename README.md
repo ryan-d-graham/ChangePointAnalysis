@@ -74,8 +74,8 @@ Key Matrices
 Bayesian Blocks: Parameter p0
 
 	•	p0: The false positive rate, determining the sensitivity of the algorithm to detecting change points.
-	•	Increasing p0: Detects fewer change points; suitable for applications where only significant changes are of interest, reducing the risk of false positives.
-	•	Decreasing p0: Detects more change points; suitable for applications requiring high sensitivity to changes, even if it increases the risk of false positives.
+	•	Decreasing p0: Detects fewer change points; suitable for applications where only significant changes are of interest, reducing the risk of false positives.
+	•	Increasing p0: Detects more change points; suitable for applications requiring high sensitivity to changes, even if it increases the risk of false positives.
 	•	Tuning p0: Adjust based on the specific requirements of the application to balance sensitivity and false positive rate. Experiment with different values to find the optimal setting for your dataset.
 
 Usage
